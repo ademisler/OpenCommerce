@@ -1,0 +1,21 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+svg rect {
+  stroke: #333;
+  cursor: pointer;
+}
+
+svg rect:hover {
+  fill: #f99;
+}
+
+.info {
+  margin-top: 20px;
+  font-size: 1.2em;
+  font-weight: bold;
+}
