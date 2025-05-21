@@ -1,0 +1,34 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+#map-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+#eu-map {
+  width: 80%;
+  max-width: 800px;
+  height: auto;
+  border: 1px solid #ccc;
+}
+
+#info {
+  margin-top: 20px;
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+#eu-map rect {
+  fill: #eee;
+  stroke: #666;
+}
+
+#eu-map rect:hover {
+  fill: #a6d5fa;
+}
