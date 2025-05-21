@@ -1,0 +1,22 @@
+.container {
+  padding: 20px;
+}
+
+.mapContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+#eu-map {
+  width: 80%;
+  max-width: 800px;
+  height: auto;
+  border: 1px solid #ccc;
+}
+
+.info {
+  margin-top: 20px;
+  font-size: 1.2em;
+  font-weight: bold;
+}
