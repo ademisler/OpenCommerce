@@ -11,6 +11,13 @@ Fulexo is a multi-channel e-commerce management platform built with Next.js and 
 
 2. Copy `.env.example` to `.env.local` and provide the required environment variables.
 
+   To enable WooCommerce integration, set your API credentials in `.env.local`:
+
+   ```env
+   WOOCOMMERCE_API_KEY=your-key
+   WOOCOMMERCE_API_SECRET=your-secret
+   ```
+
 ## Project Structure
 
 - `src/pages` – Next.js pages
