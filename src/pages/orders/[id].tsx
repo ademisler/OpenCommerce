@@ -2,6 +2,7 @@ import { useRouter } from 'next/router';
 import Layout from '../../components/Layout';
 import useSWR from 'swr';
 import { useEffect, useState } from 'react';
+import { useSession } from 'next-auth/react';
 
 interface Store {
   id: number;
@@ -14,9 +15,15 @@ interface Store {
 const fetcher = (url: string) => fetch(url).then(res => res.json());
 
 export default function OrderDetail() {
+  const { status } = useSession();
   const router = useRouter();
   const { id } = router.query;
   const [store, setStore] = useState<Store | null>(null);
+  if (status === 'loading') return null;
+  if (status === 'unauthenticated') {
+    router.replace('/login');
+    return null;
+  }
 
   useEffect(() => {
     const saved = localStorage.getItem('wooStores');

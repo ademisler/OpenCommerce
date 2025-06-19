@@ -16,7 +16,14 @@ Fulexo is a multi-channel e-commerce management platform built with Next.js and 
    ```env
    WOOCOMMERCE_API_URL=https://yourstore.com
    WOOCOMMERCE_API_KEY=your-key
-   WOOCOMMERCE_API_SECRET=your-secret
+  WOOCOMMERCE_API_SECRET=your-secret
+  ```
+
+   Set credentials for the demo authentication:
+
+   ```env
+   AUTH_EMAIL=admin@example.com
+   AUTH_PASSWORD=changeme
    ```
 
 ## Project Structure
@@ -26,6 +33,10 @@ Fulexo is a multi-channel e-commerce management platform built with Next.js and 
 - `src/lib` – Hooks and integration services
 - `src/utils` – Utility functions
 - `src/styles` – Global styles (Tailwind CSS)
+
+## Authentication
+
+Access the application at `/login` and sign in with the credentials specified in `AUTH_EMAIL` and `AUTH_PASSWORD`. After logging in you can view and update your profile at `/profile`.
 
 ## Deployment
 
