@@ -4,7 +4,6 @@
  * real API calls in production.
  */
 
-import fetch from 'node-fetch';
 
 export async function fetchProducts() {
   // Example API call
