@@ -1,6 +1,8 @@
 import Layout from '../../components/Layout';
 import useSWR from 'swr';
 import { useEffect, useState } from 'react';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
 
 interface Store {
   id: number;
@@ -19,7 +21,14 @@ interface Product {
 const fetcher = <T,>(url: string): Promise<T> => fetch(url).then((res) => res.json());
 
 export default function Products() {
+  const { status } = useSession();
+  const router = useRouter();
   const [stores, setStores] = useState<Store[]>([]);
+  if (status === 'loading') return null;
+  if (status === 'unauthenticated') {
+    router.replace('/login');
+    return null;
+  }
   const [selected, setSelected] = useState<Store | null>(null);
 
   useEffect(() => {

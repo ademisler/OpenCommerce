@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import Layout from '../../components/Layout';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
 
 interface Store {
   id: number;
@@ -10,7 +12,14 @@ interface Store {
 }
 
 export default function WooCommerceIntegrations() {
+  const { status } = useSession();
+  const router = useRouter();
   const [stores, setStores] = useState<Store[]>([]);
+  if (status === 'loading') return null;
+  if (status === 'unauthenticated') {
+    router.replace('/login');
+    return null;
+  }
   const [name, setName] = useState('');
   const [baseUrl, setBaseUrl] = useState('');
   const [key, setKey] = useState('');
