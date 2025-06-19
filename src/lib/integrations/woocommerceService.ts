@@ -4,24 +4,46 @@
  * provided via environment variables.
  */
 
-const baseUrl = process.env.WOOCOMMERCE_API_URL;
-const consumerKey = process.env.WOOCOMMERCE_API_KEY;
-const consumerSecret = process.env.WOOCOMMERCE_API_SECRET;
+export interface WooConfig {
+  baseUrl: string;
+  consumerKey: string;
+  consumerSecret: string;
+}
 
-function authHeader(): string | undefined {
-  if (!consumerKey || !consumerSecret) return undefined;
-  const token = Buffer.from(`${consumerKey}:${consumerSecret}`).toString('base64');
+const envConfig: WooConfig | null =
+  process.env.WOOCOMMERCE_API_URL &&
+  process.env.WOOCOMMERCE_API_KEY &&
+  process.env.WOOCOMMERCE_API_SECRET
+    ? {
+        baseUrl: process.env.WOOCOMMERCE_API_URL,
+        consumerKey: process.env.WOOCOMMERCE_API_KEY,
+        consumerSecret: process.env.WOOCOMMERCE_API_SECRET,
+      }
+    : null;
+
+function authHeader(config: WooConfig): string {
+  const token = Buffer.from(
+    `${config.consumerKey}:${config.consumerSecret}`
+  ).toString('base64');
   return `Basic ${token}`;
 }
 
-async function request<T>(endpoint: string): Promise<T> {
-  if (!baseUrl || !consumerKey || !consumerSecret) {
+function getConfig(config?: Partial<WooConfig>): WooConfig {
+  if (config && config.baseUrl && config.consumerKey && config.consumerSecret) {
+    return config as WooConfig;
+  }
+  if (!envConfig) {
     throw new Error('WooCommerce environment variables are not configured');
   }
+  return envConfig;
+}
 
-  const res = await fetch(`${baseUrl}/wp-json/wc/v3/${endpoint}`, {
+async function request<T>(endpoint: string, config?: Partial<WooConfig>): Promise<T> {
+  const cfg = getConfig(config);
+
+  const res = await fetch(`${cfg.baseUrl}/wp-json/wc/v3/${endpoint}`, {
     headers: {
-      Authorization: authHeader() as string,
+      Authorization: authHeader(cfg),
       'Content-Type': 'application/json',
     },
   });
@@ -33,12 +55,12 @@ async function request<T>(endpoint: string): Promise<T> {
   return res.json();
 }
 
-export async function fetchProducts(): Promise<any[]> {
-  return request<any[]>('products');
+export async function fetchProducts(config?: Partial<WooConfig>): Promise<any[]> {
+  return request<any[]>('products', config);
 }
 
-export async function fetchOrders(): Promise<any[]> {
-  return request<any[]>('orders');
+export async function fetchOrders(config?: Partial<WooConfig>): Promise<any[]> {
+  return request<any[]>('orders', config);
 }
 
 export async function syncStock() {

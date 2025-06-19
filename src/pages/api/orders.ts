@@ -1,5 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { fetchOrders as fetchWooOrders } from '../../lib/integrations/woocommerceService';
+import {
+  fetchOrders as fetchWooOrders,
+  WooConfig,
+} from '../../lib/integrations/woocommerceService';
 
 const fallbackOrders: Order[] = [
   { id: 1, status: 'processing', total: 19.99 },
@@ -17,7 +20,22 @@ export default async function handler(
   res: NextApiResponse<Order[] | { error: string }>
 ) {
   try {
-    const wooOrders = await fetchWooOrders();
+    const { baseUrl, key, secret } = req.query as Partial<WooConfig> & {
+      key?: string;
+      secret?: string;
+      baseUrl?: string;
+    };
+
+    const config =
+      baseUrl && key && secret
+        ? {
+            baseUrl: baseUrl as string,
+            consumerKey: key as string,
+            consumerSecret: secret as string,
+          }
+        : undefined;
+
+    const wooOrders = await fetchWooOrders(config);
     const orders: Order[] = wooOrders.map((o: any) => ({
       id: o.id,
       status: o.status,

@@ -1,5 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { fetchProducts as fetchWooProducts } from '../../lib/integrations/woocommerceService';
+import {
+  fetchProducts as fetchWooProducts,
+  WooConfig,
+} from '../../lib/integrations/woocommerceService';
 
 const fallbackProducts: Product[] = [
   { id: 1, name: 'Example Product', stock: 10 },
@@ -17,7 +20,22 @@ export default async function handler(
   res: NextApiResponse<Product[] | { error: string }>
 ) {
   try {
-    const wooProducts = await fetchWooProducts();
+    const { baseUrl, key, secret } = req.query as Partial<WooConfig> & {
+      key?: string;
+      secret?: string;
+      baseUrl?: string;
+    };
+
+    const config =
+      baseUrl && key && secret
+        ? {
+            baseUrl: baseUrl as string,
+            consumerKey: key as string,
+            consumerSecret: secret as string,
+          }
+        : undefined;
+
+    const wooProducts = await fetchWooProducts(config);
     const products: Product[] = wooProducts.map((p: any) => ({
       id: p.id,
       name: p.name,
