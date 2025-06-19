@@ -1,17 +1,44 @@
 /**
  * WooCommerce integration service.
- * These functions are placeholders and should be replaced with
- * real API calls.
+ * Fetches data from the WooCommerce REST API using credentials
+ * provided via environment variables.
  */
 
-export async function fetchProducts() {
-  // TODO: implement real API call
-  return [];
+const baseUrl = process.env.WOOCOMMERCE_API_URL;
+const consumerKey = process.env.WOOCOMMERCE_API_KEY;
+const consumerSecret = process.env.WOOCOMMERCE_API_SECRET;
+
+function authHeader(): string | undefined {
+  if (!consumerKey || !consumerSecret) return undefined;
+  const token = Buffer.from(`${consumerKey}:${consumerSecret}`).toString('base64');
+  return `Basic ${token}`;
 }
 
-export async function fetchOrders() {
-  // TODO: implement real API call
-  return [];
+async function request<T>(endpoint: string): Promise<T> {
+  if (!baseUrl || !consumerKey || !consumerSecret) {
+    throw new Error('WooCommerce environment variables are not configured');
+  }
+
+  const res = await fetch(`${baseUrl}/wp-json/wc/v3/${endpoint}`, {
+    headers: {
+      Authorization: authHeader() as string,
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (!res.ok) {
+    throw new Error(`WooCommerce API error: ${res.status}`);
+  }
+
+  return res.json();
+}
+
+export async function fetchProducts(): Promise<any[]> {
+  return request<any[]>('products');
+}
+
+export async function fetchOrders(): Promise<any[]> {
+  return request<any[]>('orders');
 }
 
 export async function syncStock() {

@@ -1,25 +1,32 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { fetchOrders as fetchWooOrders } from '../../../lib/integrations/woocommerceService';
 
-type Order = {
+export type Order = {
   id: number;
   status: string;
   total: number;
 };
 
-const orders: Order[] = [
-  { id: 1, status: 'pending', total: 100 },
-  { id: 2, status: 'shipped', total: 200 }
-];
-
-export default function handler(
+export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Order | { error: string }>
 ) {
-  const { id } = req.query;
-  const order = orders.find(o => o.id === Number(id));
-  if (order) {
-    res.status(200).json(order);
-  } else {
-    res.status(404).json({ error: 'Order not found' });
+  try {
+    const { id } = req.query;
+    const wooOrders = await fetchWooOrders();
+    const order = wooOrders.find((o: any) => o.id === Number(id));
+    if (order) {
+      const result: Order = {
+        id: order.id,
+        status: order.status,
+        total: parseFloat(order.total),
+      };
+      res.status(200).json(result);
+    } else {
+      res.status(404).json({ error: 'Order not found' });
+    }
+  } catch (error) {
+    console.error('Failed to fetch order from WooCommerce:', error);
+    res.status(500).json({ error: 'Failed to fetch order' });
   }
 }
