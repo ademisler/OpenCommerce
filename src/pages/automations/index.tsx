@@ -24,11 +24,29 @@ const suggestions: Suggestion[] = [
     value: '100',
     action: 'addTag',
   },
+  {
+    name: 'dailySalesSummary',
+    trigger: 'dailySummary',
+    value: '',
+    action: 'sendEmail',
+  },
+  {
+    name: 'orderShippedNotification',
+    trigger: 'orderShipped',
+    value: '',
+    action: 'sendEmail',
+  },
+  {
+    name: 'orderDeliveredNotification',
+    trigger: 'orderDelivered',
+    value: '',
+    action: 'sendSms',
+  },
 ];
 
 export default function Automations() {
   const { t } = useI18n();
-  const { automations, addAutomation } = useAutomations();
+  const { automations, addAutomation, removeAutomation } = useAutomations();
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState<Omit<Automation, 'id'>>({
     name: '',
@@ -83,7 +101,15 @@ export default function Automations() {
             key={a.id}
             className="border border-gray-300 dark:border-gray-600 p-2 rounded bg-white dark:bg-gray-800"
           >
-            <p className="font-medium">{a.name}</p>
+            <p className="font-medium flex justify-between items-center">
+              <span>{a.name}</span>
+              <button
+                className="text-red-600 hover:underline"
+                onClick={() => removeAutomation(a.id)}
+              >
+                {t('remove')}
+              </button>
+            </p>
             <p className="text-sm text-gray-600 dark:text-gray-400">
               {t('trigger')}: {t(a.trigger)}
             </p>
@@ -106,6 +132,9 @@ export default function Automations() {
               >
                 <option value="lowStock">{t('lowStock')}</option>
                 <option value="orderCreated">{t('orderCreated')}</option>
+                <option value="orderShipped">{t('orderShipped')}</option>
+                <option value="orderDelivered">{t('orderDelivered')}</option>
+                <option value="dailySummary">{t('dailySummary')}</option>
               </select>
             </div>
             <div>
@@ -126,6 +155,7 @@ export default function Automations() {
                 <option value="sendEmail">{t('sendEmail')}</option>
                 <option value="addTag">{t('addTag')}</option>
                 <option value="syncExternalApi">{t('syncExternalApi')}</option>
+                <option value="sendSms">{t('sendSms')}</option>
               </select>
             </div>
             <div className="flex justify-end space-x-2 pt-2">

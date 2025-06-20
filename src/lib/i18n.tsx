@@ -89,6 +89,13 @@ const translations: Record<Lang, Record<string, string>> = {
     connected: 'Connected',
     disconnected: 'Disconnected',
     lastSync: 'Last sync',
+    orderShipped: 'Order shipped',
+    orderDelivered: 'Order delivered',
+    dailySummary: 'Daily summary',
+    sendSms: 'Send SMS',
+    dailySalesSummary: 'Send daily sales summary email',
+    orderShippedNotification: 'Notify customer when order is shipped',
+    orderDeliveredNotification: 'Notify customer when order is delivered',
   },
   tr: {
     dashboard: 'Kontrol Paneli',
@@ -176,6 +183,13 @@ const translations: Record<Lang, Record<string, string>> = {
     connected: 'Bağlı',
     disconnected: 'Bağlantı Yok',
     lastSync: 'Son senkronizasyon',
+    orderShipped: 'Sipariş gönderildi',
+    orderDelivered: 'Sipariş teslim edildi',
+    dailySummary: 'Günlük özet',
+    sendSms: 'SMS gönder',
+    dailySalesSummary: 'Günlük satış özetini e-posta ile gönder',
+    orderShippedNotification: 'Sipariş gönderildiğinde müşteriyi bilgilendir',
+    orderDeliveredNotification: 'Sipariş teslim edildiğinde müşteriyi bilgilendir',
   },
   fr: {
     dashboard: 'Tableau de bord',
@@ -263,6 +277,13 @@ const translations: Record<Lang, Record<string, string>> = {
     connected: 'Connecté',
     disconnected: 'Déconnecté',
     lastSync: 'Dernière synchronisation',
+    orderShipped: 'Commande expédiée',
+    orderDelivered: 'Commande livrée',
+    dailySummary: 'Résumé quotidien',
+    sendSms: 'Envoyer un SMS',
+    dailySalesSummary: 'Envoyer le résumé des ventes quotidiennes par e-mail',
+    orderShippedNotification: 'Notifier le client lorsque la commande est expédiée',
+    orderDeliveredNotification: 'Notifier le client lorsque la commande est livrée',
   }
 };
 
