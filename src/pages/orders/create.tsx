@@ -33,12 +33,11 @@ export default function CreateOrder() {
   const [selected, setSelected] = useState<Store | null>(null);
   const [items, setItems] = useState<Record<number, number>>({});
 
-  if (status === 'loading') return null;
-  if (status === 'unauthenticated') {
-    router.replace('/login');
-    return null;
-  }
-
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      router.replace('/login');
+    }
+  }, [status, router]);
   useEffect(() => {
     const saved = localStorage.getItem('wooStores');
     if (saved) {
@@ -47,6 +46,8 @@ export default function CreateOrder() {
       if (parsed.length > 0) setSelected(parsed[0]);
     }
   }, []);
+
+  if (status === 'loading' || status === 'unauthenticated') return null;
 
   const query = selected
     ? `/api/products?baseUrl=${encodeURIComponent(selected.baseUrl)}&key=${selected.key}&secret=${selected.secret}`

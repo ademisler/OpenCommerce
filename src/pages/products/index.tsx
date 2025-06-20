@@ -25,12 +25,13 @@ export default function Products() {
   const { status } = useSession();
   const router = useRouter();
   const [stores, setStores] = useState<Store[]>([]);
-  if (status === 'loading') return null;
-  if (status === 'unauthenticated') {
-    router.replace('/login');
-    return null;
-  }
   const [selected, setSelected] = useState<Store | null>(null);
+
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      router.replace('/login');
+    }
+  }, [status, router]);
 
   useEffect(() => {
     const saved = localStorage.getItem('wooStores');
@@ -40,6 +41,8 @@ export default function Products() {
       if (parsed.length > 0) setSelected(parsed[0]);
     }
   }, []);
+
+  if (status === 'loading' || status === 'unauthenticated') return null;
 
   const query = selected
     ? `/api/products?baseUrl=${encodeURIComponent(selected.baseUrl)}&key=${selected.key}&secret=${selected.secret}`
