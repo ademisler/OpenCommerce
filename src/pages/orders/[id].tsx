@@ -20,7 +20,7 @@ export default function OrderDetail() {
   const { status } = useSession();
   const router = useRouter();
   const { id } = router.query;
-  const { data: stores } = useStores();
+  const { data: stores = [] } = useStores();
   const [store, setStore] = useState<Store | null>(null);
   const { t } = useI18n();
   if (status === 'loading') return null;

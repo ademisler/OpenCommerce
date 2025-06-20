@@ -10,7 +10,7 @@ export default function Dashboard() {
   const { status } = useSession();
   const router = useRouter();
   const { t } = useI18n();
-  const { data: stores } = useStores();
+  const { data: stores = [] } = useStores();
   const [selected, setSelected] = useState<Store | null>(null);
 
   const fetcher = <T,>(url: string): Promise<T> => fetch(url).then(res => res.json());

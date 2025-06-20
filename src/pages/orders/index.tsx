@@ -27,7 +27,7 @@ const fetcher = <T,>(url: string): Promise<T> =>
 export default function Orders() {
   const { status } = useSession();
   const router = useRouter();
-  const { data: stores } = useStores();
+  const { data: stores = [] } = useStores();
   const [selected, setSelected] = useState<Store | null>(null);
   const { t } = useI18n();
 
