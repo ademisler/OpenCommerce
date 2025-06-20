@@ -13,7 +13,6 @@ export default function Profile() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [profile, setProfile] = useState<ProfileInfo>({ name: '', image: '' });
-  const [password, setPassword] = useState('');
   const { t } = useI18n();
 
   useEffect(() => {
@@ -44,11 +43,6 @@ export default function Profile() {
     });
   };
 
-  const changePassword = () => {
-    localStorage.setItem('demoPassword', password);
-    setPassword('');
-    alert('Password updated locally (demo only)');
-  };
 
   if (status !== 'authenticated') {
     return null;
@@ -74,22 +68,12 @@ export default function Profile() {
             onChange={(e) => setProfile({ ...profile, image: e.target.value })}
           />
         </div>
-        <button className="bg-blue-500 text-white px-4 py-2" onClick={saveProfile}>
+        <button className="bg-blue-500 text-white px-4 py-2 rounded-md" onClick={saveProfile}>
           {t('saveProfile')}
         </button>
-        <div className="pt-4 space-y-2">
-          <label className="block mb-1">{t('changePassword')}</label>
-          <input
-            className="border p-2 w-full"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <button className="bg-blue-500 text-white px-4 py-2" onClick={changePassword}>
-            {t('updatePassword')}
-          </button>
-        </div>
-        <button className="bg-red-500 text-white px-4 py-2 mt-4" onClick={() => signOut()}>{t('signOut')}</button>
+        <button className="bg-red-500 text-white px-4 py-2 mt-4 rounded-md" onClick={() => signOut()}>
+          {t('signOut')}
+        </button>
       </div>
     </Layout>
   );

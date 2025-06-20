@@ -54,7 +54,9 @@ const translations: Record<Lang, Record<string, string>> = {
     consumerKey: 'Consumer Key',
     consumerSecret: 'Consumer Secret',
     remove: 'Remove',
-    automationsIntro: 'Define automation rules for orders and products.'
+    automationsIntro: 'Define automation rules for orders and products.',
+    cart: 'Cart',
+    newCategory: 'New category'
   },
   tr: {
     dashboard: 'Kontrol Paneli',
@@ -107,7 +109,9 @@ const translations: Record<Lang, Record<string, string>> = {
     consumerKey: 'Tüketici Anahtarı',
     consumerSecret: 'Tüketici Gizli Anahtarı',
     remove: 'Sil',
-    automationsIntro: 'Siparişler ve ürünler için otomasyon kuralları tanımlayın.'
+    automationsIntro: 'Siparişler ve ürünler için otomasyon kuralları tanımlayın.',
+    cart: 'Sepet',
+    newCategory: 'Yeni kategori'
   },
   fr: {
     dashboard: 'Tableau de bord',
@@ -160,7 +164,9 @@ const translations: Record<Lang, Record<string, string>> = {
     consumerKey: 'Clé consommateur',
     consumerSecret: 'Secret consommateur',
     remove: 'Supprimer',
-    automationsIntro: 'Définissez des règles d\'automatisation pour les commandes et les produits.'
+    automationsIntro: 'Définissez des règles d\'automatisation pour les commandes et les produits.',
+    cart: 'Panier',
+    newCategory: 'Nouvelle catégorie'
   }
 };
 
