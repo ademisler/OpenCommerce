@@ -1,5 +1,5 @@
 import useSWR from 'swr';
-import { fetcher } from '../utils/fetcher';
+import { fetcher } from '../../utils/fetcher';
 
 export default function useProducts(storeId?: number) {
   const query =
