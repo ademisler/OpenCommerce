@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import Layout from '../../components/Layout';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
+import { useI18n } from '../../lib/i18n';
 
 interface Store {
   id: number;
@@ -15,6 +16,7 @@ export default function WooCommerceIntegrations() {
   const { status } = useSession();
   const router = useRouter();
   const [stores, setStores] = useState<Store[]>([]);
+  const { t } = useI18n();
   if (status === 'loading') return null;
   if (status === 'unauthenticated') {
     router.replace('/login');
@@ -51,34 +53,34 @@ export default function WooCommerceIntegrations() {
 
   return (
     <Layout>
-      <h1 className="text-2xl font-bold mb-4">WooCommerce Stores</h1>
+      <h1 className="text-2xl font-bold mb-4">{t('wooStores')}</h1>
       <div className="mb-6 space-y-2">
         <input
           className="border p-2 w-full"
-          placeholder="Store Name"
+          placeholder={t('storeName')}
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
         <input
           className="border p-2 w-full"
-          placeholder="Base URL"
+          placeholder={t('baseUrl')}
           value={baseUrl}
           onChange={(e) => setBaseUrl(e.target.value)}
         />
         <input
           className="border p-2 w-full"
-          placeholder="Consumer Key"
+          placeholder={t('consumerKey')}
           value={key}
           onChange={(e) => setKey(e.target.value)}
         />
         <input
           className="border p-2 w-full"
-          placeholder="Consumer Secret"
+          placeholder={t('consumerSecret')}
           value={secret}
           onChange={(e) => setSecret(e.target.value)}
         />
         <button className="bg-blue-500 text-white px-4 py-2" onClick={addStore}>
-          Add Store
+          {t('addStore')}
         </button>
       </div>
       <ul className="space-y-2">

@@ -3,6 +3,7 @@ import Layout from '../../components/Layout';
 import useSWR from 'swr';
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
+import { useI18n } from '../../lib/i18n';
 
 interface Store {
   id: number;
@@ -19,6 +20,7 @@ export default function OrderDetail() {
   const router = useRouter();
   const { id } = router.query;
   const [store, setStore] = useState<Store | null>(null);
+  const { t } = useI18n();
   if (status === 'loading') return null;
   if (status === 'unauthenticated') {
     router.replace('/login');
@@ -41,14 +43,14 @@ export default function OrderDetail() {
   const { data, error } = useSWR(query, fetcher);
 
   if (error) return <div>Error loading order.</div>;
-  if (!store) return <div>No WooCommerce store configured.</div>;
-  if (!data) return <div>Loading...</div>;
+  if (!store) return <div>{t('noStore')}</div>;
+  if (!data) return <div>{t('loading')}</div>;
 
   return (
     <Layout>
-      <h1 className="text-2xl font-bold mb-4">Order #{data.id}</h1>
-      <p>Status: {data.status}</p>
-      <p>Total: {data.total}</p>
+      <h1 className="text-2xl font-bold mb-4">{t('order')} #{data.id}</h1>
+      <p>{t('status')}: {data.status}</p>
+      <p>{t('total')}: {data.total}</p>
     </Layout>
   );
 }

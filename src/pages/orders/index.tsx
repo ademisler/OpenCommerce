@@ -4,6 +4,7 @@ import useSWR from 'swr';
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
+import { useI18n } from '../../lib/i18n';
 
 interface Store {
   id: number;
@@ -27,6 +28,7 @@ export default function Orders() {
   const router = useRouter();
   const [stores, setStores] = useState<Store[]>([]);
   const [selected, setSelected] = useState<Store | null>(null);
+  const { t } = useI18n();
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -54,19 +56,19 @@ export default function Orders() {
   if (error) return <div>Error loading orders.</div>;
   if (!selected) return (
     <Layout>
-      <p>No WooCommerce store configured.</p>
+      <p>{t('noStore')}</p>
     </Layout>
   );
-  if (!data) return <div>Loading...</div>;
+  if (!data) return <div>{t('loading')}</div>;
 
   return (
     <Layout>
-      <h1 className="text-2xl font-bold mb-4">Orders</h1>
+      <h1 className="text-2xl font-bold mb-4">{t('orders')}</h1>
       <Link
         href="/orders/create"
         className="inline-block mb-4 bg-blue-500 text-white px-4 py-2 rounded"
       >
-        Create Order
+        {t('createOrder')}
       </Link>
       <div className="mb-4">
         <select
@@ -87,7 +89,7 @@ export default function Orders() {
       <ul className="space-y-2">
         {data.map((order) => (
           <li key={order.id} className="border p-2 rounded">
-            <Link href={`/orders/${order.id}`}>Order #{order.id}</Link>
+            <Link href={`/orders/${order.id}`}>{t('order')} #{order.id}</Link>
           </li>
         ))}
       </ul>

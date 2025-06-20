@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useSession, signOut } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import Layout from '../components/Layout';
+import { useI18n } from '../lib/i18n';
 
 interface ProfileInfo {
   name: string;
@@ -13,6 +14,7 @@ export default function Profile() {
   const router = useRouter();
   const [profile, setProfile] = useState<ProfileInfo>({ name: '', image: '' });
   const [password, setPassword] = useState('');
+  const { t } = useI18n();
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -45,10 +47,10 @@ export default function Profile() {
 
   return (
     <Layout>
-      <h1 className="text-2xl font-bold mb-4">Profile</h1>
+      <h1 className="text-2xl font-bold mb-4">{t('profile')}</h1>
       <div className="space-y-4 max-w-sm">
         <div>
-          <label className="block mb-1">Name</label>
+          <label className="block mb-1">{t('name')}</label>
           <input
             className="border p-2 w-full"
             value={profile.name}
@@ -56,7 +58,7 @@ export default function Profile() {
           />
         </div>
         <div>
-          <label className="block mb-1">Profile Image URL</label>
+          <label className="block mb-1">{t('profileImage')}</label>
           <input
             className="border p-2 w-full"
             value={profile.image}
@@ -64,10 +66,10 @@ export default function Profile() {
           />
         </div>
         <button className="bg-blue-500 text-white px-4 py-2" onClick={saveProfile}>
-          Save Profile
+          {t('saveProfile')}
         </button>
         <div className="pt-4 space-y-2">
-          <label className="block mb-1">Change Password</label>
+          <label className="block mb-1">{t('changePassword')}</label>
           <input
             className="border p-2 w-full"
             type="password"
@@ -75,10 +77,10 @@ export default function Profile() {
             onChange={(e) => setPassword(e.target.value)}
           />
           <button className="bg-blue-500 text-white px-4 py-2" onClick={changePassword}>
-            Update Password
+            {t('updatePassword')}
           </button>
         </div>
-        <button className="bg-red-500 text-white px-4 py-2 mt-4" onClick={() => signOut()}>Sign Out</button>
+        <button className="bg-red-500 text-white px-4 py-2 mt-4" onClick={() => signOut()}>{t('signOut')}</button>
       </div>
     </Layout>
   );
