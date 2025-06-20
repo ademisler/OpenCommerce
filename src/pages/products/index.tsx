@@ -17,6 +17,8 @@ interface Product {
   categories: string[];
   weight: string;
   dimensions: { length: string; width: string; height: string };
+  price: number;
+  ean: string;
 }
 
 interface Category {
@@ -124,6 +126,8 @@ export default function Products() {
                 <img src={product.image} alt={product.name} className="w-64 h-64 object-contain mx-auto" />
                 <div className="prose text-sm mt-2">
                   <p>Categories: {product.categories.join(', ') || '-'}</p>
+                  <p>Price: {product.price}</p>
+                  <p>EAN: {product.ean}</p>
                   <p>Weight: {product.weight}</p>
                   <p>
                     Dimensions: {product.dimensions.length} x {product.dimensions.width} x {product.dimensions.height}
@@ -141,19 +145,33 @@ export default function Products() {
                 <input
                   type="number"
                   className="border p-1 w-full"
+                  placeholder={t('stock')}
                   value={form.stock ?? 0}
                   onChange={(e) => setForm({ ...form, stock: Number(e.target.value) })}
                 />
                 <input
                   className="border p-1 w-full"
-                  placeholder="Weight"
+                  placeholder={t('weight')}
                   value={form.weight || ''}
                   onChange={(e) => setForm({ ...form, weight: e.target.value })}
+                />
+                <input
+                  type="number"
+                  className="border p-1 w-full"
+                  placeholder={t('price')}
+                  value={form.price ?? 0}
+                  onChange={(e) => setForm({ ...form, price: Number(e.target.value) })}
+                />
+                <input
+                  className="border p-1 w-full"
+                  placeholder={t('ean')}
+                  value={form.ean || ''}
+                  onChange={(e) => setForm({ ...form, ean: e.target.value })}
                 />
                 <div className="grid grid-cols-3 gap-1">
                   <input
                     className="border p-1"
-                    placeholder="L"
+                    placeholder={t('lengthShort')}
                     value={form.dimensions?.length || ''}
                     onChange={(e) =>
                       setForm({
@@ -168,7 +186,7 @@ export default function Products() {
                   />
                   <input
                     className="border p-1"
-                    placeholder="W"
+                    placeholder={t('widthShort')}
                     value={form.dimensions?.width || ''}
                     onChange={(e) =>
                       setForm({
@@ -183,7 +201,7 @@ export default function Products() {
                   />
                   <input
                     className="border p-1"
-                    placeholder="H"
+                    placeholder={t('heightShort')}
                     value={form.dimensions?.height || ''}
                     onChange={(e) =>
                       setForm({

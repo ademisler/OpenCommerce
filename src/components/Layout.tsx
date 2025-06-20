@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useSession, signOut } from 'next-auth/react';
 import { useI18n, Lang } from '../lib/i18n';
+import { useTheme } from '../lib/theme';
+import { SunIcon, MoonIcon } from './Icons';
 
 interface Props {
   children: React.ReactNode;
@@ -10,6 +12,7 @@ interface Props {
 const Layout: React.FC<Props> = ({ children }) => {
   const { data: session } = useSession();
   const { t, lang, setLang } = useI18n();
+  const { theme, toggleTheme } = useTheme();
   const [menuOpen, setMenuOpen] = useState(false);
   const [profile, setProfile] = useState<{ name: string; image: string }>({ name: '', image: '' });
 
@@ -27,8 +30,8 @@ const Layout: React.FC<Props> = ({ children }) => {
   const imageSrc = profile.image || session?.user?.image || 'https://via.placeholder.com/32';
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50 text-gray-900">
-      <header className="bg-gray-800 text-white">
+    <div className="min-h-screen flex flex-col bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100">
+      <header className="bg-gray-800 text-white dark:bg-gray-700">
         <nav className="flex items-center container mx-auto p-4">
           <div className="flex space-x-4 flex-1">
             <Link href="/dashboard" className="hover:underline">{t('dashboard')}</Link>
@@ -46,6 +49,13 @@ const Layout: React.FC<Props> = ({ children }) => {
             <option value="tr">TR</option>
             <option value="fr">FR</option>
           </select>
+          <button className="mr-4" onClick={toggleTheme} aria-label={t('theme')}>
+            {theme === 'dark' ? (
+              <SunIcon className="w-6 h-6" />
+            ) : (
+              <MoonIcon className="w-6 h-6" />
+            )}
+          </button>
           {session ? (
             <div className="relative">
               <img

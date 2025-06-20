@@ -209,7 +209,7 @@ export default function CreateOrder() {
         </div>
       )}
       {Object.keys(items).length > 0 && (
-        <div className="fixed bottom-0 left-0 right-0 bg-white border-t p-4 shadow-md">
+        <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t p-4 shadow-md max-h-80 overflow-y-auto">
           <h2 className="font-semibold mb-2">{t('cart')}</h2>
           <ul className="space-y-1">
             {Object.entries(items)

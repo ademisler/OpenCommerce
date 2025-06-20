@@ -16,6 +16,8 @@ const fallbackProducts: Product[] = [
     categories: [],
     weight: '',
     dimensions: { length: '', width: '', height: '' },
+    price: 0,
+    ean: '',
   },
   {
     id: 2,
@@ -25,6 +27,8 @@ const fallbackProducts: Product[] = [
     categories: [],
     weight: '',
     dimensions: { length: '', width: '', height: '' },
+    price: 0,
+    ean: '',
   },
 ];
 
@@ -36,6 +40,8 @@ export type Product = {
   categories: string[];
   weight: string;
   dimensions: { length: string; width: string; height: string };
+  price: number;
+  ean: string;
 };
 
 export default async function handler(
@@ -83,6 +89,8 @@ export default async function handler(
         width: p.dimensions?.width || '',
         height: p.dimensions?.height || '',
       },
+      price: parseFloat(p.price) || 0,
+      ean: p.sku || '',
     }));
     res.status(200).json(products);
   } catch (error) {
