@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import useSWR from 'swr';
 import { useI18n } from '../lib/i18n';
 import useStores, { Store } from '../lib/hooks/useStores';
+import { fetcher } from '../utils/fetcher';
 
 export default function Dashboard() {
   const { status } = useSession();
@@ -12,8 +13,6 @@ export default function Dashboard() {
   const { t } = useI18n();
   const { data: stores = [] } = useStores();
   const [selected, setSelected] = useState<Store | null>(null);
-
-  const fetcher = <T,>(url: string): Promise<T> => fetch(url).then(res => res.json());
 
   const ordersQuery = selected ? `/api/orders?storeId=${selected.id}` : null;
   const productsQuery = selected ? `/api/products?storeId=${selected.id}` : null;

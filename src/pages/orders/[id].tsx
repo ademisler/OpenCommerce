@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useI18n } from '../../lib/i18n';
 import useStores from '../../lib/hooks/useStores';
+import { fetcher } from '../../utils/fetcher';
 
 interface Store {
   id: number;
@@ -14,7 +15,6 @@ interface Store {
   secret: string;
 }
 
-const fetcher = (url: string) => fetch(url).then(res => res.json());
 
 export default function OrderDetail() {
   const { status } = useSession();

@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import useSWR from 'swr';
 import { useI18n } from '../../lib/i18n';
 import useStores from '../../lib/hooks/useStores';
+import { fetcher } from '../../utils/fetcher';
 
 interface Store {
   id: number;
@@ -26,7 +27,6 @@ interface OrderItem {
   quantity: number;
 }
 
-const fetcher = <T,>(url: string): Promise<T> => fetch(url).then((res) => res.json());
 
 export default function CreateOrder() {
   const { status } = useSession();
@@ -62,14 +62,16 @@ export default function CreateOrder() {
       .filter(([, qty]) => qty > 0)
       .map(([id, qty]) => ({ product_id: Number(id), quantity: qty }));
     if (lineItems.length === 0) return;
-    await fetch(`/api/orders/create?storeId=${selected.id}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ items: lineItems, customer, note }),
-      }
-    );
-    router.push('/orders');
+    const res = await fetch(`/api/orders/create?storeId=${selected.id}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ items: lineItems, customer, note }),
+    });
+    if (res.ok) {
+      router.push('/orders');
+    } else {
+      alert('Failed to create order');
+    }
   };
 
   return (

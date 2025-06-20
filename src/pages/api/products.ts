@@ -7,20 +7,6 @@ import { getServerSession } from 'next-auth/next';
 import { authOptions } from './auth/[...nextauth]';
 import { sbRequest } from '../../lib/supabase';
 
-const fallbackProducts: Product[] = [
-  {
-    id: 1,
-    name: 'Example Product',
-    stock: 10,
-    image: 'https://via.placeholder.com/80',
-  },
-  {
-    id: 2,
-    name: 'Demo Product',
-    stock: 5,
-    image: 'https://via.placeholder.com/80',
-  },
-];
 
 export type Product = {
   id: number;
@@ -77,7 +63,7 @@ export default async function handler(
     ) {
       res.status(400).json({ error: error.message });
     } else {
-      res.status(200).json(fallbackProducts);
+      res.status(500).json({ error: 'Failed to fetch products' });
     }
   }
 }

@@ -6,6 +6,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { useI18n } from '../../lib/i18n';
 import useStores from '../../lib/hooks/useStores';
+import { fetcher } from '../../utils/fetcher';
 
 interface Store {
   id: number;
@@ -21,8 +22,6 @@ interface Order {
   total: number;
 }
 
-const fetcher = <T,>(url: string): Promise<T> =>
-  fetch(url).then((res) => res.json());
 
 export default function Orders() {
   const { status } = useSession();

@@ -7,10 +7,6 @@ import { getServerSession } from 'next-auth/next';
 import { authOptions } from './auth/[...nextauth]';
 import { sbRequest } from '../../lib/supabase';
 
-const fallbackOrders: Order[] = [
-  { id: 1, status: 'processing', total: 19.99 },
-  { id: 2, status: 'completed', total: 5.0 },
-];
 
 export type Order = {
   id: number;
@@ -65,7 +61,7 @@ export default async function handler(
     ) {
       res.status(400).json({ error: error.message });
     } else {
-      res.status(200).json(fallbackOrders);
+      res.status(500).json({ error: 'Failed to fetch orders' });
     }
   }
 }
