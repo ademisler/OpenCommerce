@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Layout from '../../components/Layout';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { useI18n } from '../../lib/i18n';
+import useStores, { Store } from '../../lib/hooks/useStores';
 
 interface Store {
   id: number;
@@ -15,7 +16,7 @@ interface Store {
 export default function WooCommerceIntegrations() {
   const { status } = useSession();
   const router = useRouter();
-  const [stores, setStores] = useState<Store[]>([]);
+  const { data: stores = [], mutate } = useStores();
   const { t } = useI18n();
   if (status === 'loading') return null;
   if (status === 'unauthenticated') {
@@ -27,24 +28,17 @@ export default function WooCommerceIntegrations() {
   const [key, setKey] = useState('');
   const [secret, setSecret] = useState('');
 
-  useEffect(() => {
-    const saved = localStorage.getItem('wooStores');
-    if (saved) {
-      setStores(JSON.parse(saved));
+  const addStore = async () => {
+    const payload = { name, baseUrl, key, secret };
+    const res = await fetch('/api/stores', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    if (res.ok) {
+      const created = await res.json();
+      mutate([...(stores || []), created], false);
     }
-  }, []);
-
-  const addStore = () => {
-    const newStore: Store = {
-      id: Date.now(),
-      name,
-      baseUrl,
-      key,
-      secret,
-    };
-    const updated = [...stores, newStore];
-    setStores(updated);
-    localStorage.setItem('wooStores', JSON.stringify(updated));
     setName('');
     setBaseUrl('');
     setKey('');

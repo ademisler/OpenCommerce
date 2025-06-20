@@ -1,16 +1,17 @@
 import Layout from '../components/Layout';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import useSWR from 'swr';
 import { useI18n } from '../lib/i18n';
+import useStores, { Store } from '../lib/hooks/useStores';
 
 export default function Dashboard() {
   const { status } = useSession();
   const router = useRouter();
   const { t } = useI18n();
-  const [stores, setStores] = useState<{ id: number; name: string; baseUrl: string; key: string; secret: string }[]>([]);
-  const [selected, setSelected] = useState<{ id: number; name: string; baseUrl: string; key: string; secret: string } | null>(null);
+  const { data: stores } = useStores();
+  const [selected, setSelected] = useState<Store | null>(null);
 
   const fetcher = <T,>(url: string): Promise<T> => fetch(url).then(res => res.json());
 
@@ -30,13 +31,10 @@ export default function Dashboard() {
   const totalStock = products?.reduce((sum, p) => sum + (p.stock ?? 0), 0) ?? 0;
 
   useEffect(() => {
-    const saved = localStorage.getItem('wooStores');
-    if (saved) {
-      const parsed = JSON.parse(saved);
-      setStores(parsed);
-      if (parsed.length > 0) setSelected(parsed[0]);
+    if (stores && stores.length > 0) {
+      setSelected(stores[0]);
     }
-  }, []);
+  }, [stores]);
 
   return (
     <Layout>

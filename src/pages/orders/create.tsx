@@ -4,6 +4,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import useSWR from 'swr';
 import { useI18n } from '../../lib/i18n';
+import useStores, { Store } from '../../lib/hooks/useStores';
 
 interface Store {
   id: number;
@@ -30,7 +31,7 @@ const fetcher = <T,>(url: string): Promise<T> => fetch(url).then((res) => res.js
 export default function CreateOrder() {
   const { status } = useSession();
   const router = useRouter();
-  const [stores, setStores] = useState<Store[]>([]);
+  const { data: stores } = useStores();
   const [selected, setSelected] = useState<Store | null>(null);
   const [items, setItems] = useState<Record<number, number>>({});
   const { t } = useI18n();
@@ -49,13 +50,8 @@ export default function CreateOrder() {
   const [note, setNote] = useState('');
 
   useEffect(() => {
-    const saved = localStorage.getItem('wooStores');
-    if (saved) {
-      const parsed: Store[] = JSON.parse(saved);
-      setStores(parsed);
-      if (parsed.length > 0) setSelected(parsed[0]);
-    }
-  }, []);
+    if (stores && stores.length > 0) setSelected(stores[0]);
+  }, [stores]);
 
   const query = selected
     ? `/api/products?baseUrl=${encodeURIComponent(selected.baseUrl)}&key=${selected.key}&secret=${selected.secret}`

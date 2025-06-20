@@ -13,11 +13,19 @@ Fulexo is a multi-channel e-commerce management platform built with Next.js and 
 
    To enable WooCommerce integration, set your API credentials and store URL in `.env.local`:
 
-   ```env
-   WOOCOMMERCE_API_URL=https://yourstore.com
-   WOOCOMMERCE_API_KEY=your-key
+ ```env
+  WOOCOMMERCE_API_URL=https://yourstore.com
+  WOOCOMMERCE_API_KEY=your-key
   WOOCOMMERCE_API_SECRET=your-secret
   ```
+
+   Provide Supabase credentials so profile and store data can persist:
+
+   ```env
+   NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=public-anon-key
+   SUPABASE_SERVICE_ROLE_KEY=service-role-key
+   ```
 
    Set credentials for the demo authentication:
 
