@@ -10,6 +10,8 @@ Fulexo is a multi-channel e-commerce management platform built with Next.js and 
    ```
 
 2. Copy `.env.example` to `.env.local` and provide the required environment variables.
+   The `.env.local` file is ignored by Git, so your secrets remain private. Use your
+   admin account credentials here.
 
    To enable WooCommerce integration, set your API credentials and store URL in `.env.local`:
 
@@ -19,7 +21,9 @@ Fulexo is a multi-channel e-commerce management platform built with Next.js and 
   WOOCOMMERCE_API_SECRET=your-secret
   ```
 
-   Provide Supabase credentials so profile and store data can persist:
+   Provide Supabase credentials so profile and store data can persist. If you are
+   connecting to a self-managed PostgreSQL instance, also fill in the `POSTGRES_*`
+   variables:
 
    ```env
    NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
