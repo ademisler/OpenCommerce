@@ -11,6 +11,8 @@ export type Order = {
   id: number;
   status: string;
   total: number;
+  shipping_company?: string;
+  tracking_number?: string;
 };
 
 export default async function handler(
@@ -54,8 +56,16 @@ export default async function handler(
     }
 
     if (req.method === 'PUT') {
-      const { status, items } = req.body || {};
-      return res.status(200).json({ id: Number(id), status: status || 'updated', total: 0 });
+      const { status, shipping_company, tracking_number } = req.body || {};
+      return res
+        .status(200)
+        .json({
+          id: Number(id),
+          status: status || 'updated',
+          total: 0,
+          shipping_company: shipping_company || '',
+          tracking_number: tracking_number || '',
+        });
     }
 
     const wooOrders = await fetchWooOrders(config);
@@ -65,6 +75,9 @@ export default async function handler(
         id: order.id,
         status: order.status,
         total: parseFloat(order.total),
+        shipping_company: order.shipping_lines?.[0]?.method_title || '',
+        tracking_number:
+          order.meta_data?.find((m: any) => m.key === 'tracking_number')?.value || '',
       };
       res.status(200).json(result);
     } else {
