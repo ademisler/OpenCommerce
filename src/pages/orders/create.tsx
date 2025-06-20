@@ -32,6 +32,13 @@ export default function CreateOrder() {
   const [stores, setStores] = useState<Store[]>([]);
   const [selected, setSelected] = useState<Store | null>(null);
   const [items, setItems] = useState<Record<number, number>>({});
+  const [customer, setCustomer] = useState({
+    first_name: '',
+    last_name: '',
+    email: '',
+    address_1: '',
+    city: '',
+  });
 
   useEffect(() => {
     const saved = localStorage.getItem('wooStores');
@@ -49,7 +56,7 @@ export default function CreateOrder() {
 
   const create = async () => {
     if (!selected) return;
-    const lineItems: OrderItem[] = Object.entries(items)
+    const lineItems: OrderItem[] = (Object.entries(items) as [string, number][]) 
       .filter(([, qty]) => qty > 0)
       .map(([id, qty]) => ({ product_id: Number(id), quantity: qty }));
     if (lineItems.length === 0) return;
@@ -58,7 +65,7 @@ export default function CreateOrder() {
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ items: lineItems }),
+        body: JSON.stringify({ items: lineItems, customer }),
       }
     );
     router.push('/orders');
@@ -82,6 +89,38 @@ export default function CreateOrder() {
             </option>
           ))}
         </select>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mb-6">
+        <input
+          className="border p-2"
+          placeholder="First Name"
+          value={customer.first_name}
+          onChange={(e) => setCustomer({ ...customer, first_name: e.target.value })}
+        />
+        <input
+          className="border p-2"
+          placeholder="Last Name"
+          value={customer.last_name}
+          onChange={(e) => setCustomer({ ...customer, last_name: e.target.value })}
+        />
+        <input
+          className="border p-2 col-span-1 md:col-span-2"
+          placeholder="Email"
+          value={customer.email}
+          onChange={(e) => setCustomer({ ...customer, email: e.target.value })}
+        />
+        <input
+          className="border p-2 col-span-1 md:col-span-2"
+          placeholder="Address"
+          value={customer.address_1}
+          onChange={(e) => setCustomer({ ...customer, address_1: e.target.value })}
+        />
+        <input
+          className="border p-2 col-span-1 md:col-span-2"
+          placeholder="City"
+          value={customer.city}
+          onChange={(e) => setCustomer({ ...customer, city: e.target.value })}
+        />
       </div>
       {!data ? (
         <p>Loading products...</p>
