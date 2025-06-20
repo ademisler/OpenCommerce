@@ -22,6 +22,7 @@ interface Product {
   name: string;
   stock: number;
   image: string;
+  price: number;
 }
 
 interface OrderItem {
@@ -51,6 +52,15 @@ export default function CreateOrder() {
     email: '',
   });
   const [note, setNote] = useState('');
+  const [step, setStep] = useState(1);
+
+  const validateCustomer = () =>
+    customer.first_name &&
+    customer.last_name &&
+    customer.address_1 &&
+    customer.city &&
+    customer.country &&
+    customer.email;
 
   useEffect(() => {
     if (stores && stores.length > 0) setSelected(stores[0]);
@@ -94,169 +104,181 @@ export default function CreateOrder() {
           ))}
         </select>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-        <div>
-          <label className="block mb-1 text-sm text-gray-700 dark:text-gray-200">
-            {t('firstName')}
-          </label>
-          <input
-            className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 p-2 w-full"
-            value={customer.first_name}
-            onChange={(e) => setCustomer({ ...customer, first_name: e.target.value })}
-          />
-        </div>
-        <div>
-          <label className="block mb-1 text-sm text-gray-700 dark:text-gray-200">
-            {t('lastName')}
-          </label>
-          <input
-            className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 p-2 w-full"
-            value={customer.last_name}
-            onChange={(e) => setCustomer({ ...customer, last_name: e.target.value })}
-          />
-        </div>
-        <div className="md:col-span-2">
-          <label className="block mb-1 text-sm text-gray-700 dark:text-gray-200">
-            {t('company')}
-          </label>
-          <input
-            className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 p-2 w-full"
-            value={customer.company}
-            onChange={(e) => setCustomer({ ...customer, company: e.target.value })}
-          />
-        </div>
-        <div className="md:col-span-2">
-          <label className="block mb-1 text-sm text-gray-700 dark:text-gray-200">
-            {t('country')}
-          </label>
-          <select
-            className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 p-2 w-full"
-            value={customer.country}
-            onChange={(e) => setCustomer({ ...customer, country: e.target.value })}
-          >
-          <option value="">{t('country')}</option>
-          {europeanCountries.map((c) => (
-            <option key={c.code} value={c.code}>
-              {c.name}
-            </option>
-          ))}
-          </select>
-        </div>
-        <div className="md:col-span-2">
-          <label className="block mb-1 text-sm text-gray-700 dark:text-gray-200">
-            {t('houseNumber')}
-          </label>
-          <input
-            className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 p-2 w-full"
-            value={customer.address_1}
-            onChange={(e) => setCustomer({ ...customer, address_1: e.target.value })}
-          />
-        </div>
-        <div className="md:col-span-2">
-          <label className="block mb-1 text-sm text-gray-700 dark:text-gray-200">
-            {t('apartment')}
-          </label>
-          <input
-            className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 p-2 w-full"
-            value={customer.address_2}
-            onChange={(e) => setCustomer({ ...customer, address_2: e.target.value })}
-          />
-        </div>
-        <div>
-          <label className="block mb-1 text-sm text-gray-700 dark:text-gray-200">
-            {t('postcode')}
-          </label>
-          <input
-            className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 p-2 w-full"
-            value={customer.postcode}
-            onChange={(e) => setCustomer({ ...customer, postcode: e.target.value })}
-          />
-        </div>
-        <div>
-          <label className="block mb-1 text-sm text-gray-700 dark:text-gray-200">
-            {t('city')}
-          </label>
-          <input
-            className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 p-2 w-full"
-            value={customer.city}
-            onChange={(e) => setCustomer({ ...customer, city: e.target.value })}
-          />
-        </div>
-        <div>
-          <label className="block mb-1 text-sm text-gray-700 dark:text-gray-200">
-            {t('phone')}
-          </label>
-          <input
-            className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 p-2 w-full"
-            value={customer.phone}
-            onChange={(e) => setCustomer({ ...customer, phone: e.target.value })}
-          />
-        </div>
-        <div>
-          <label className="block mb-1 text-sm text-gray-700 dark:text-gray-200">
-            {t('emailAddress')}
-          </label>
-          <input
-            className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 p-2 w-full"
-            value={customer.email}
-            onChange={(e) => setCustomer({ ...customer, email: e.target.value })}
-          />
-        </div>
-        <div className="md:col-span-2">
-          <label className="block mb-1 text-sm text-gray-700 dark:text-gray-200">
-            {t('notes')}
-          </label>
-          <textarea
-            className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 p-2 w-full"
-            value={note}
-            onChange={(e) => setNote(e.target.value)}
-          />
-        </div>
-      </div>
-      <div className="mb-4">
-        <label className="block mb-1 text-sm text-gray-700 dark:text-gray-200">
-          {t('searchProducts')}
-        </label>
-        <input
-          className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 p-2 w-full"
-          value={productSearch}
-          onChange={(e) => setProductSearch(e.target.value)}
-        />
-      </div>
-      {!data ? (
-        <p>{t('loadingProducts')}</p>
-      ) : (
-        <div className="space-y-2 pb-64">
-          {data
-            .filter((p) => p.name.toLowerCase().includes(productSearch.toLowerCase()))
-            .map((p) => (
-              <div key={p.id} className="flex items-center space-x-4 border border-gray-300 dark:border-gray-600 p-2 rounded bg-white dark:bg-gray-800">
-                <img src={p.image} alt={p.name} className="w-16 h-16 object-cover" />
-                <div className="flex-1">
-                  <p className="font-medium">{p.name}</p>
-                  <p className="text-sm text-gray-600">Stock: {p.stock}</p>
-                </div>
-                <input
-                  type="number"
-                  min="0"
-                  className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 p-1 w-20 text-gray-700 dark:text-gray-200"
-                  value={items[p.id] ?? 0}
-                  onChange={(e) => setItems({ ...items, [p.id]: Number(e.target.value) })}
-                />
-                <button
-                  className="bg-green-500 dark:bg-green-600 text-white px-2 py-1 rounded-md flex items-center dark:border dark:border-gray-600"
-                  onClick={() => {
-                    setItems({ ...items, [p.id]: (items[p.id] ?? 0) + 1 });
-                  }}
-                >
-                  <PlusIcon className="w-4 h-4" />
-                </button>
-              </div>
-            ))}
+
+      {step === 1 && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          <div>
+            <label className="block mb-1 text-sm text-gray-700 dark:text-gray-200">
+              {t('firstName')}
+            </label>
+            <input
+              className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 p-2 w-full"
+              value={customer.first_name}
+              onChange={(e) => setCustomer({ ...customer, first_name: e.target.value })}
+            />
+          </div>
+          <div>
+            <label className="block mb-1 text-sm text-gray-700 dark:text-gray-200">
+              {t('lastName')}
+            </label>
+            <input
+              className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 p-2 w-full"
+              value={customer.last_name}
+              onChange={(e) => setCustomer({ ...customer, last_name: e.target.value })}
+            />
+          </div>
+          <div className="md:col-span-2">
+            <label className="block mb-1 text-sm text-gray-700 dark:text-gray-200">
+              {t('company')}
+            </label>
+            <input
+              className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 p-2 w-full"
+              value={customer.company}
+              onChange={(e) => setCustomer({ ...customer, company: e.target.value })}
+            />
+          </div>
+          <div className="md:col-span-2">
+            <label className="block mb-1 text-sm text-gray-700 dark:text-gray-200">
+              {t('country')}
+            </label>
+            <select
+              className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 p-2 w-full"
+              value={customer.country}
+              onChange={(e) => setCustomer({ ...customer, country: e.target.value })}
+            >
+              <option value="">{t('country')}</option>
+              {europeanCountries.map((c) => (
+                <option key={c.code} value={c.code}>
+                  {c.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="md:col-span-2">
+            <label className="block mb-1 text-sm text-gray-700 dark:text-gray-200">
+              {t('houseNumber')}
+            </label>
+            <input
+              className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 p-2 w-full"
+              value={customer.address_1}
+              onChange={(e) => setCustomer({ ...customer, address_1: e.target.value })}
+            />
+          </div>
+          <div className="md:col-span-2">
+            <label className="block mb-1 text-sm text-gray-700 dark:text-gray-200">
+              {t('apartment')}
+            </label>
+            <input
+              className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 p-2 w-full"
+              value={customer.address_2}
+              onChange={(e) => setCustomer({ ...customer, address_2: e.target.value })}
+            />
+          </div>
+          <div>
+            <label className="block mb-1 text-sm text-gray-700 dark:text-gray-200">
+              {t('postcode')}
+            </label>
+            <input
+              className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 p-2 w-full"
+              value={customer.postcode}
+              onChange={(e) => setCustomer({ ...customer, postcode: e.target.value })}
+            />
+          </div>
+          <div>
+            <label className="block mb-1 text-sm text-gray-700 dark:text-gray-200">
+              {t('city')}
+            </label>
+            <input
+              className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 p-2 w-full"
+              value={customer.city}
+              onChange={(e) => setCustomer({ ...customer, city: e.target.value })}
+            />
+          </div>
+          <div>
+            <label className="block mb-1 text-sm text-gray-700 dark:text-gray-200">
+              {t('phone')}
+            </label>
+            <input
+              className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 p-2 w-full"
+              value={customer.phone}
+              onChange={(e) => setCustomer({ ...customer, phone: e.target.value })}
+            />
+          </div>
+          <div>
+            <label className="block mb-1 text-sm text-gray-700 dark:text-gray-200">
+              {t('emailAddress')}
+            </label>
+            <input
+              className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 p-2 w-full"
+              value={customer.email}
+              onChange={(e) => setCustomer({ ...customer, email: e.target.value })}
+            />
+          </div>
+          <div className="md:col-span-2">
+            <label className="block mb-1 text-sm text-gray-700 dark:text-gray-200">
+              {t('notes')}
+            </label>
+            <textarea
+              className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 p-2 w-full"
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+            />
+          </div>
         </div>
       )}
-      {Object.keys(items).length > 0 && (
-        <div className="bg-white dark:bg-gray-800 border-t dark:border-gray-600 p-4 shadow-md max-h-[50vh] overflow-y-auto mt-4">
+
+      {step === 2 && (
+        <>
+          <div className="mb-4">
+            <label className="block mb-1 text-sm text-gray-700 dark:text-gray-200">
+              {t('searchProducts')}
+            </label>
+            <input
+              className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 p-2 w-full"
+              value={productSearch}
+              onChange={(e) => setProductSearch(e.target.value)}
+            />
+          </div>
+          {!data ? (
+            <p>{t('loadingProducts')}</p>
+          ) : (
+            <div className="space-y-2 pb-64">
+              {data
+                .filter((p) => p.name.toLowerCase().includes(productSearch.toLowerCase()))
+                .map((p) => (
+                  <div
+                    key={p.id}
+                    className="flex items-center space-x-4 border border-gray-300 dark:border-gray-600 p-2 rounded bg-white dark:bg-gray-800"
+                  >
+                    <img src={p.image} alt={p.name} className="w-16 h-16 object-cover" />
+                    <div className="flex-1">
+                      <p className="font-medium">{p.name}</p>
+                      <p className="text-sm text-gray-600">Stock: {p.stock}</p>
+                    </div>
+                    <input
+                      type="number"
+                      min="0"
+                      className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 p-1 w-20 text-gray-700 dark:text-gray-200"
+                      value={items[p.id] ?? 0}
+                      onChange={(e) => setItems({ ...items, [p.id]: Number(e.target.value) })}
+                    />
+                    <button
+                      className="bg-green-500 dark:bg-green-600 text-white px-2 py-1 rounded-md flex items-center dark:border dark:border-gray-600"
+                      onClick={() => {
+                        setItems({ ...items, [p.id]: (items[p.id] ?? 0) + 1 });
+                      }}
+                    >
+                      <PlusIcon className="w-4 h-4" />
+                    </button>
+                  </div>
+                ))}
+            </div>
+          )}
+        </>
+      )}
+
+      {step === 3 && (
+        <div className="bg-white dark:bg-gray-800 p-4 rounded">
           <h2 className="font-semibold mb-2">{t('cart')}</h2>
           <ul className="space-y-1">
             {Object.entries(items)
@@ -283,14 +305,47 @@ export default function CreateOrder() {
                 );
               })}
           </ul>
+          <p className="font-semibold mt-2">
+            Total:
+            {(
+              Object.entries(items).reduce((sum, [id, qty]) => {
+                const prod = data?.find((p) => p.id === Number(id));
+                return sum + (prod?.price || 0) * qty;
+              }, 0)
+            ).toFixed(2)}
+          </p>
+        </div>
+      )}
+
+      <div className="flex justify-between mt-4">
+        {step > 1 && (
+          <button
+            className="px-4 py-2 rounded border dark:border-gray-600"
+            onClick={() => setStep(step - 1)}
+          >
+            Back
+          </button>
+        )}
+        {step < 3 && (
+          <button
+            className="ml-auto bg-blue-600 dark:bg-blue-500 text-white px-4 py-2 rounded-md"
+            onClick={() => {
+              if (step === 1 && !validateCustomer()) return;
+              setStep(step + 1);
+            }}
+          >
+            Next
+          </button>
+        )}
+        {step === 3 && (
           <button
             onClick={create}
-            className="mt-2 bg-blue-600 dark:bg-blue-500 text-white px-4 py-2 rounded-md w-full"
+            className="ml-auto bg-blue-600 dark:bg-blue-500 text-white px-4 py-2 rounded-md"
           >
             {t('createOrder')}
           </button>
-        </div>
-      )}
+        )}
+      </div>
     </Layout>
   );
 }

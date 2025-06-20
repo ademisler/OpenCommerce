@@ -8,14 +8,15 @@ import { authOptions } from './auth/[...nextauth]';
 import { sbRequest } from '../../lib/supabase';
 
 const fallbackOrders: Order[] = [
-  { id: 1, status: 'processing', total: 19.99, shipping_company: '', tracking_number: '' },
-  { id: 2, status: 'completed', total: 5.0, shipping_company: '', tracking_number: '' },
+  { id: 1, status: 'processing', total: 19.99, date_created: '2024-01-01T00:00:00Z', shipping_company: '', tracking_number: '' },
+  { id: 2, status: 'completed', total: 5.0, date_created: '2024-01-02T00:00:00Z', shipping_company: '', tracking_number: '' },
 ];
 
 export type Order = {
   id: number;
   status: string;
   total: number;
+  date_created: string;
   shipping_company?: string;
   tracking_number?: string;
 };
@@ -57,6 +58,7 @@ export default async function handler(
       id: o.id,
       status: o.status,
       total: parseFloat(o.total),
+      date_created: o.date_created,
       shipping_company: o.shipping_lines?.[0]?.method_title || '',
       tracking_number:
         o.meta_data?.find((m: any) => m.key === 'tracking_number')?.value || '',

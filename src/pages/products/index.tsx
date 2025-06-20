@@ -2,6 +2,7 @@ import Layout from '../../components/Layout';
 import useSWR from 'swr';
 import { fetcher } from '../../lib/fetcher';
 import { EditIcon, PlusIcon } from '../../components/Icons';
+import Select from 'react-select';
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
@@ -57,6 +58,7 @@ export default function Products() {
   const { data, error } = useSWR<Product[]>(query, fetcher);
   const catQuery = selected ? `/api/categories?storeId=${selected.id}` : null;
   const { data: categories = [] } = useSWR<Category[]>(catQuery, fetcher);
+  const categoryOptions = categories.map((c) => ({ value: c.name, label: c.name }));
 
   if (error) return <div>Error loading products.</div>;
   if (!selected) return (
@@ -234,23 +236,18 @@ export default function Products() {
                     />
                   </div>
                 </div>
-                <select
-                  multiple
-                  className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 p-1 w-full h-32"
-                  value={form.categories || []}
-                  onChange={(e) =>
+                <Select
+                  isMulti
+                  className="text-black"
+                  options={categoryOptions}
+                  value={categoryOptions.filter((o) => (form.categories || []).includes(o.value))}
+                  onChange={(vals: any) =>
                     setForm({
                       ...form,
-                      categories: Array.from(e.target.selectedOptions).map((o) => o.value),
+                      categories: vals.map((v: any) => v.value),
                     })
                   }
-                >
-                  {categories.map((c) => (
-                    <option key={c.id} value={c.name} style={{ paddingLeft: c.parent ? '1rem' : undefined }}>
-                      {c.name}
-                    </option>
-                  ))}
-                </select>
+                />
                 <div className="flex mt-1">
                   <input
                     className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 p-1 flex-1"
