@@ -15,6 +15,15 @@ function StoreCard({ store }: { store: Store }) {
   const [status, setStatus] = useState<'connected' | 'disconnected' | null>(null);
   const [testing, setTesting] = useState(false);
 
+  const domain = (() => {
+    try {
+      return new URL(store.baseUrl).hostname;
+    } catch {
+      return store.baseUrl;
+    }
+  })();
+  const favicon = `https://icons.duckduckgo.com/ip3/${domain}.ico`;
+
   const testConnection = async () => {
     setTesting(true);
     try {
@@ -30,7 +39,7 @@ function StoreCard({ store }: { store: Store }) {
     <div className="border border-gray-300 dark:border-gray-600 p-4 rounded bg-white dark:bg-gray-800 space-y-1">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-2">
-          <img src="https://via.placeholder.com/40" alt="logo" className="w-8 h-8" />
+          <img src={favicon} alt="favicon" className="w-8 h-8" />
           <h3 className="font-semibold">{store.name}</h3>
         </div>
         {status && (
