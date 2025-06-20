@@ -241,7 +241,7 @@ export default function Products() {
                   className="text-black"
                   options={categoryOptions}
                   value={categoryOptions.filter((o) => (form.categories || []).includes(o.value))}
-                  onChange={(vals) =>
+                  onChange={(vals: any) =>
                     setForm({
                       ...form,
                       categories: vals.map((v) => v.value),
