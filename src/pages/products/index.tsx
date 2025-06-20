@@ -35,6 +35,7 @@ export default function Products() {
   const [expanded, setExpanded] = useState<number | null>(null);
   const [editing, setEditing] = useState<number | null>(null);
   const [form, setForm] = useState<Partial<Product>>({});
+  const [newCat, setNewCat] = useState('');
   const { t } = useI18n();
 
   useEffect(() => {
@@ -217,19 +218,19 @@ export default function Products() {
                   <input
                     className="border p-1 flex-1"
                     placeholder={t('newCategory')}
-                    value={(form as any).newCat || ''}
-                    onChange={(e) => setForm({ ...(form as any), newCat: e.target.value })}
+                    value={newCat}
+                    onChange={(e) => setNewCat(e.target.value)}
                   />
                   <button
                     type="button"
                     className="ml-2 bg-blue-500 text-white px-2 py-1 rounded-md flex items-center"
                     onClick={() => {
-                      if (!(form as any).newCat) return;
+                      if (!newCat) return;
                       setForm({
                         ...form,
-                        categories: [...(form.categories || []), (form as any).newCat],
-                        newCat: '',
+                        categories: [...(form.categories || []), newCat],
                       });
+                      setNewCat('');
                     }}
                   >
                     <PlusIcon className="w-4 h-4" />
