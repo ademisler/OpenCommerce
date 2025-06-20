@@ -4,6 +4,7 @@ import useSWR from 'swr';
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useI18n } from '../../lib/i18n';
+import useStores, { Store } from '../../lib/hooks/useStores';
 
 interface Store {
   id: number;
@@ -19,6 +20,7 @@ export default function OrderDetail() {
   const { status } = useSession();
   const router = useRouter();
   const { id } = router.query;
+  const { data: stores } = useStores();
   const [store, setStore] = useState<Store | null>(null);
   const { t } = useI18n();
   if (status === 'loading') return null;
@@ -28,12 +30,8 @@ export default function OrderDetail() {
   }
 
   useEffect(() => {
-    const saved = localStorage.getItem('wooStores');
-    if (saved) {
-      const parsed: Store[] = JSON.parse(saved);
-      if (parsed.length > 0) setStore(parsed[0]);
-    }
-  }, []);
+    if (stores && stores.length > 0) setStore(stores[0]);
+  }, [stores]);
 
   const query =
     id && store

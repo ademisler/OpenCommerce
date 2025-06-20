@@ -14,10 +14,14 @@ const Layout: React.FC<Props> = ({ children }) => {
   const [profile, setProfile] = useState<{ name: string; image: string }>({ name: '', image: '' });
 
   useEffect(() => {
-    const saved = localStorage.getItem('profileInfo');
-    if (saved) {
-      setProfile(JSON.parse(saved));
-    }
+    const load = async () => {
+      const res = await fetch('/api/profile');
+      if (res.ok) {
+        const data = await res.json();
+        setProfile(data);
+      }
+    };
+    load();
   }, [session]);
 
   const imageSrc = profile.image || session?.user?.image || 'https://via.placeholder.com/32';

@@ -23,16 +23,25 @@ export default function Profile() {
   }, [status, router]);
 
   useEffect(() => {
-    const saved = localStorage.getItem('profileInfo');
-    if (saved) {
-      setProfile(JSON.parse(saved));
-    } else if (session?.user) {
-      setProfile({ name: session.user.name || '', image: session.user.image || '' });
-    }
-  }, [session]);
+    if (status !== 'authenticated') return;
+    const load = async () => {
+      const res = await fetch('/api/profile');
+      if (res.ok) {
+        const data = await res.json();
+        setProfile(data);
+      } else if (session?.user) {
+        setProfile({ name: session.user.name || '', image: session.user.image || '' });
+      }
+    };
+    load();
+  }, [status, session]);
 
-  const saveProfile = () => {
-    localStorage.setItem('profileInfo', JSON.stringify(profile));
+  const saveProfile = async () => {
+    await fetch('/api/profile', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(profile),
+    });
   };
 
   const changePassword = () => {
