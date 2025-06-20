@@ -12,13 +12,24 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   if (req.method === 'GET') {
     const rows = await sbRequest<any[]>('GET', 'woo_stores', undefined, `?email=eq.${email}`);
-    return res.status(200).json(rows);
+    const mapped = rows.map(({ base_url, ...r }) => ({
+      ...r,
+      baseUrl: base_url,
+    }));
+    return res.status(200).json(mapped);
   }
 
   if (req.method === 'POST') {
     const body = req.body ?? {};
-    const inserted = await sbRequest<any[]>('POST', 'woo_stores', [{ ...body, email }]);
-    return res.status(200).json(inserted[0]);
+    const { baseUrl, ...rest } = body;
+    const inserted = await sbRequest<any[]>(
+      'POST',
+      'woo_stores',
+      [{ ...rest, base_url: baseUrl, email }]
+    );
+    const created = { ...inserted[0], baseUrl: inserted[0].base_url };
+    delete (created as any).base_url;
+    return res.status(200).json(created);
   }
 
   res.setHeader('Allow', ['GET', 'POST']);
