@@ -42,7 +42,8 @@ export default function OrderDetail() {
     total: number;
   }
 
-  const { data, error } = useSWR<OrderData>(query, fetcher);
+  const { data, mutate, error } = useSWR<OrderData>(query, fetcher);
+  const [newStatus, setNewStatus] = useState('');
 
   if (error) return <div>Error loading order.</div>;
   if (!store) return <div>{t('noStore')}</div>;
@@ -51,8 +52,44 @@ export default function OrderDetail() {
   return (
     <Layout>
       <h1 className="text-2xl font-bold mb-4">{t('order')} #{data.id}</h1>
-      <p>{t('status')}: {data.status}</p>
       <p>{t('total')}: {data.total}</p>
+      <div className="space-y-2 mt-4">
+        <select
+          className="border p-2"
+          value={newStatus || data.status}
+          onChange={(e) => setNewStatus(e.target.value)}
+        >
+          <option value="processing">processing</option>
+          <option value="completed">completed</option>
+          <option value="cancelled">cancelled</option>
+        </select>
+        <div className="space-x-2">
+          <button
+            className="bg-blue-500 text-white px-3 py-1 rounded"
+            onClick={async () => {
+              await fetch(`/api/orders/${data.id}?storeId=${store.id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status: newStatus || data.status }),
+              });
+              mutate();
+            }}
+          >
+            {t('update')}
+          </button>
+          <button
+            className="bg-red-600 text-white px-3 py-1 rounded"
+            onClick={async () => {
+              await fetch(`/api/orders/${data.id}?storeId=${store.id}`, {
+                method: 'DELETE',
+              });
+              router.push('/orders');
+            }}
+          >
+            {t('delete')}
+          </button>
+        </div>
+      </div>
     </Layout>
   );
 }
