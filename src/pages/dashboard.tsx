@@ -7,18 +7,18 @@ import { useTheme } from '../lib/theme';
 
 // Recharts components depend on browser APIs, so load them dynamically and
 // relax type checking since the package isn't installed in this environment.
-const PieChart = dynamic(() => import('recharts').then(m => ({ default: m.PieChart })), { ssr: false });
-const Pie = dynamic(() => import('recharts').then(m => ({ default: m.Pie })), { ssr: false });
-const Cell = dynamic(() => import('recharts').then(m => ({ default: m.Cell })), { ssr: false });
-const ResponsiveContainer = dynamic(() => import('recharts').then(m => ({ default: m.ResponsiveContainer })), { ssr: false });
-const LineChart = dynamic(() => import('recharts').then(m => ({ default: m.LineChart })), { ssr: false });
-const Line = dynamic(() => import('recharts').then(m => ({ default: m.Line })), { ssr: false });
-const BarChart = dynamic(() => import('recharts').then(m => ({ default: m.BarChart })), { ssr: false });
-const Bar = dynamic(() => import('recharts').then(m => ({ default: m.Bar })), { ssr: false });
-const XAxis = dynamic(() => import('recharts').then(m => ({ default: m.XAxis })), { ssr: false });
-const YAxis = dynamic(() => import('recharts').then(m => ({ default: m.YAxis })), { ssr: false });
-const Tooltip = dynamic(() => import('recharts').then(m => ({ default: m.Tooltip })), { ssr: false });
-const CartesianGrid = dynamic(() => import('recharts').then(m => ({ default: m.CartesianGrid })), { ssr: false });
+const PieChart = dynamic<any>(() => import('recharts').then(m => ({ default: m.PieChart })), { ssr: false });
+const Pie = dynamic<any>(() => import('recharts').then(m => ({ default: m.Pie })), { ssr: false });
+const Cell = dynamic<any>(() => import('recharts').then(m => ({ default: m.Cell })), { ssr: false });
+const ResponsiveContainer = dynamic<any>(() => import('recharts').then(m => ({ default: m.ResponsiveContainer })), { ssr: false });
+const LineChart = dynamic<any>(() => import('recharts').then(m => ({ default: m.LineChart })), { ssr: false });
+const Line = dynamic<any>(() => import('recharts').then(m => ({ default: m.Line })), { ssr: false });
+const BarChart = dynamic<any>(() => import('recharts').then(m => ({ default: m.BarChart })), { ssr: false });
+const Bar = dynamic<any>(() => import('recharts').then(m => ({ default: m.Bar })), { ssr: false });
+const XAxis = dynamic<any>(() => import('recharts').then(m => ({ default: m.XAxis })), { ssr: false });
+const YAxis = dynamic<any>(() => import('recharts').then(m => ({ default: m.YAxis })), { ssr: false });
+const Tooltip = dynamic<any>(() => import('recharts').then(m => ({ default: m.Tooltip })), { ssr: false });
+const CartesianGrid = dynamic<any>(() => import('recharts').then(m => ({ default: m.CartesianGrid })), { ssr: false });
 import useSWR from 'swr';
 import { fetcher } from '../lib/fetcher';
 import { useI18n } from '../lib/i18n';
