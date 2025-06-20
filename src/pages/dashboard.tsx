@@ -2,6 +2,21 @@ import Layout from '../components/Layout';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
+import dynamic from 'next/dynamic';
+import { useTheme } from '../lib/theme';
+
+const PieChart = dynamic(() => import('recharts').then(m => m.PieChart), { ssr: false });
+const Pie = dynamic(() => import('recharts').then(m => m.Pie), { ssr: false });
+const Cell = dynamic(() => import('recharts').then(m => m.Cell), { ssr: false });
+const ResponsiveContainer = dynamic(() => import('recharts').then(m => m.ResponsiveContainer), { ssr: false });
+const LineChart = dynamic(() => import('recharts').then(m => m.LineChart), { ssr: false });
+const Line = dynamic(() => import('recharts').then(m => m.Line), { ssr: false });
+const BarChart = dynamic(() => import('recharts').then(m => m.BarChart), { ssr: false });
+const Bar = dynamic(() => import('recharts').then(m => m.Bar), { ssr: false });
+const XAxis = dynamic(() => import('recharts').then(m => m.XAxis), { ssr: false });
+const YAxis = dynamic(() => import('recharts').then(m => m.YAxis), { ssr: false });
+const Tooltip = dynamic(() => import('recharts').then(m => m.Tooltip), { ssr: false });
+const CartesianGrid = dynamic(() => import('recharts').then(m => m.CartesianGrid), { ssr: false });
 import useSWR from 'swr';
 import { fetcher } from '../lib/fetcher';
 import { useI18n } from '../lib/i18n';
@@ -13,6 +28,10 @@ export default function Dashboard() {
   const { t } = useI18n();
   const { data: stores = [] } = useStores();
   const [selected, setSelected] = useState<Store | null>(null);
+  const [range, setRange] = useState<'7' | '30' | 'custom'>('7');
+  const [customStart, setCustomStart] = useState('');
+  const [customEnd, setCustomEnd] = useState('');
+  const { theme } = useTheme();
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -28,11 +47,38 @@ export default function Dashboard() {
 
   const { data: orders } = useSWR<any[]>(ordersQuery, fetcher);
   const { data: products } = useSWR<any[]>(productsQuery, fetcher);
+  const rangeStart = (() => {
+    if (range === '7') return new Date(Date.now() - 7 * 86400000);
+    if (range === '30') return new Date(Date.now() - 30 * 86400000);
+    if (customStart) return new Date(customStart);
+    return new Date(0);
+  })();
+  const rangeEnd = range === 'custom' && customEnd ? new Date(customEnd) : new Date();
+  const filteredOrders = (orders || []).filter((o) => {
+    const d = new Date(o.date_created);
+    return d >= rangeStart && d <= rangeEnd;
+  });
 
-  const orderCount = orders?.length ?? 0;
-  const totalRevenue = orders?.reduce((sum, o) => sum + (o.total ?? 0), 0) ?? 0;
+  const orderCount = filteredOrders.length;
+  const totalRevenue = filteredOrders.reduce((sum, o) => sum + (o.total ?? 0), 0);
   const productCount = products?.length ?? 0;
   const totalStock = products?.reduce((sum, p) => sum + (p.stock ?? 0), 0) ?? 0;
+
+  const stockData = (products || []).map((p) => ({ name: p.name, value: p.stock }));
+  const dailyData = Object.entries(
+    filteredOrders.reduce((acc: Record<string, number>, o: any) => {
+      const d = new Date(o.date_created).toISOString().slice(0, 10);
+      acc[d] = (acc[d] || 0) + 1;
+      return acc;
+    }, {})
+  ).map(([date, count]) => ({ date, count }));
+  const monthlyData = Object.entries(
+    filteredOrders.reduce((acc: Record<string, number>, o: any) => {
+      const d = new Date(o.date_created).toISOString().slice(0, 7);
+      acc[d] = (acc[d] || 0) + (o.total ?? 0);
+      return acc;
+    }, {})
+  ).map(([month, total]) => ({ month, total }));
 
   useEffect(() => {
     if (stores && stores.length > 0) {
@@ -71,6 +117,70 @@ export default function Dashboard() {
         <div className="border rounded p-4 text-center">
           <p className="text-sm text-gray-600">{t('revenue')}</p>
           <p className="text-xl font-semibold">${totalRevenue.toFixed(2)}</p>
+        </div>
+      </div>
+      <div className="mb-4 space-x-2">
+        <select
+          className="border p-1"
+          value={range}
+          onChange={(e) => setRange(e.target.value as '7' | '30' | 'custom')}
+        >
+          <option value="7">Last 7 days</option>
+          <option value="30">Last 30 days</option>
+          <option value="custom">Custom</option>
+        </select>
+        {range === 'custom' && (
+          <>
+            <input
+              type="date"
+              className="border p-1"
+              value={customStart}
+              onChange={(e) => setCustomStart(e.target.value)}
+            />
+            <input
+              type="date"
+              className="border p-1"
+              value={customEnd}
+              onChange={(e) => setCustomEnd(e.target.value)}
+            />
+          </>
+        )}
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="h-64">
+          <ResponsiveContainer>
+            <PieChart>
+              <Pie data={stockData} dataKey="value" nameKey="name" outerRadius={80}>
+                {stockData.map((_, i) => (
+                  <Cell key={i} fill={theme === 'dark' ? `hsl(${i * 50},70%,60%)` : `hsl(${i * 50},70%,50%)`} />
+                ))}
+              </Pie>
+              <Tooltip />
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
+        <div className="h-64">
+          <ResponsiveContainer>
+            <LineChart data={dailyData} margin={{ top: 20, right: 20, bottom: 20, left: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="date" stroke="currentColor" />
+              <YAxis stroke="currentColor" />
+              <Tooltip />
+              <Line type="monotone" dataKey="count" stroke="#3b82f6" />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+        <div className="h-64">
+          <ResponsiveContainer>
+            <BarChart data={monthlyData} margin={{ top: 20, right: 20, bottom: 20, left: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="month" stroke="currentColor" />
+              <YAxis stroke="currentColor" />
+              <Tooltip />
+              <Bar dataKey="total" fill="#10b981" />
+            </BarChart>
+          </ResponsiveContainer>
         </div>
       </div>
       <p>{t('welcome')}</p>
