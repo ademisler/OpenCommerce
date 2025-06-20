@@ -1,6 +1,7 @@
 import Layout from '../../components/Layout';
 import useSWR from 'swr';
 import { fetcher } from '../../lib/fetcher';
+import { EditIcon, PlusIcon } from '../../components/Icons';
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
@@ -18,6 +19,12 @@ interface Product {
   dimensions: { length: string; width: string; height: string };
 }
 
+interface Category {
+  id: number;
+  name: string;
+  parent: number;
+}
+
 
 export default function Products() {
   const { status } = useSession();
@@ -28,6 +35,7 @@ export default function Products() {
   const [expanded, setExpanded] = useState<number | null>(null);
   const [editing, setEditing] = useState<number | null>(null);
   const [form, setForm] = useState<Partial<Product>>({});
+  const [newCat, setNewCat] = useState('');
   const { t } = useI18n();
 
   useEffect(() => {
@@ -45,6 +53,8 @@ export default function Products() {
   const query = selected ? `/api/products?storeId=${selected.id}` : null;
 
   const { data, error } = useSWR<Product[]>(query, fetcher);
+  const catQuery = selected ? `/api/categories?storeId=${selected.id}` : null;
+  const { data: categories = [] } = useSWR<Category[]>(catQuery, fetcher);
 
   if (error) return <div>Error loading products.</div>;
   if (!selected) return (
@@ -100,13 +110,13 @@ export default function Products() {
                 <p className="text-sm text-gray-600">Stock: {product.stock}</p>
               </div>
               <button
-                className="text-blue-600 hover:underline"
+                className="text-blue-600 hover:underline flex items-center"
                 onClick={() => {
                   setEditing(product.id);
                   setForm(product);
                 }}
               >
-                Edit
+                <EditIcon className="w-4 h-4 mr-1" /> Edit
               </button>
             </div>
             {expanded === product.id && (
@@ -187,15 +197,58 @@ export default function Products() {
                     }
                   />
                 </div>
-                <input
-                  className="border p-1 w-full"
-                  placeholder="Categories (comma separated)"
-                  value={form.categories?.join(',') || ''}
-                  onChange={(e) => setForm({ ...form, categories: e.target.value.split(',') })}
-                />
+                <select
+                  multiple
+                  className="border p-1 w-full h-32"
+                  value={form.categories || []}
+                  onChange={(e) =>
+                    setForm({
+                      ...form,
+                      categories: Array.from(e.target.selectedOptions).map((o) => o.value),
+                    })
+                  }
+                >
+                  {categories.map((c) => (
+                    <option key={c.id} value={c.name} style={{ paddingLeft: c.parent ? '1rem' : undefined }}>
+                      {c.name}
+                    </option>
+                  ))}
+                </select>
+                <div className="flex mt-1">
+                  <input
+                    className="border p-1 flex-1"
+                    placeholder={t('newCategory')}
+                    value={newCat}
+                    onChange={(e) => setNewCat(e.target.value)}
+                  />
+                  <button
+                    type="button"
+                    className="ml-2 bg-blue-500 text-white px-2 py-1 rounded-md flex items-center"
+                    onClick={() => {
+                      if (!newCat) return;
+                      setForm({
+                        ...form,
+                        categories: [...(form.categories || []), newCat],
+                      });
+                      setNewCat('');
+                    }}
+                  >
+                    <PlusIcon className="w-4 h-4" />
+                  </button>
+                </div>
+                <p className="text-xs text-gray-600 mt-1">
+                  {(() => {
+                    const changed = Object.keys(form).filter((k) =>
+                      JSON.stringify((product as any)[k]) !== JSON.stringify((form as any)[k])
+                    );
+                    return changed.length > 0
+                      ? `Changed: ${changed.join(', ')}`
+                      : 'No changes';
+                  })()}
+                </p>
                 <div className="flex space-x-2">
                   <button
-                    className="bg-blue-500 text-white px-2 py-1"
+                    className="bg-blue-500 text-white px-2 py-1 rounded-md flex items-center space-x-1"
                     onClick={async () => {
                       await fetch(`/api/products/${product.id}?storeId=${selected?.id}`, {
                         method: 'PUT',
@@ -205,9 +258,9 @@ export default function Products() {
                       setEditing(null);
                     }}
                   >
-                    Save
+                    <span>Save</span>
                   </button>
-                  <button className="px-2 py-1" onClick={() => setEditing(null)}>
+                  <button className="px-2 py-1 rounded-md" onClick={() => setEditing(null)}>
                     Cancel
                   </button>
                 </div>

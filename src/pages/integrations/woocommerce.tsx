@@ -96,7 +96,7 @@ export default function WooCommerceIntegrations() {
           value={secret}
           onChange={(e) => setSecret(e.target.value)}
         />
-        <button className="bg-blue-500 text-white px-4 py-2" onClick={addStore}>
+        <button className="bg-blue-500 text-white px-4 py-2 rounded-md" onClick={addStore}>
           {t('addStore')}
         </button>
       </div>
@@ -126,8 +126,8 @@ export default function WooCommerceIntegrations() {
                   onChange={(e) => setEditing({ ...editing, secret: e.target.value })}
                 />
                 <div className="flex space-x-2">
-                  <button className="bg-blue-500 text-white px-2 py-1" onClick={updateStore}>Save</button>
-                  <button className="px-2 py-1" onClick={() => setEditing(null)}>Cancel</button>
+                  <button className="bg-blue-500 text-white px-2 py-1 rounded-md" onClick={updateStore}>Save</button>
+                  <button className="px-2 py-1 rounded-md" onClick={() => setEditing(null)}>Cancel</button>
                 </div>
               </div>
             ) : (

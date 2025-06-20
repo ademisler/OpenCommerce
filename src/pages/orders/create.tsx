@@ -7,6 +7,7 @@ import { fetcher } from '../../lib/fetcher';
 import { useI18n } from '../../lib/i18n';
 import useStores from '../../lib/hooks/useStores';
 import { europeanCountries } from '../../utils/europeanCountries';
+import { PlusIcon, TrashIcon } from '../../components/Icons';
 
 interface Store {
   id: number;
@@ -196,37 +197,53 @@ export default function CreateOrder() {
                   onChange={(e) => setItems({ ...items, [p.id]: Number(e.target.value) })}
                 />
                 <button
-                  className="bg-green-500 text-white px-2 py-1"
+                  className="bg-green-500 text-white px-2 py-1 rounded-md flex items-center"
                   onClick={() => {
                     setItems({ ...items, [p.id]: (items[p.id] ?? 0) + 1 });
                   }}
                 >
-                  Add
+                  <PlusIcon className="w-4 h-4" />
                 </button>
               </div>
             ))}
         </div>
       )}
       {Object.keys(items).length > 0 && (
-        <div className="mt-4 border p-2 rounded">
-          <h2 className="font-semibold mb-2">Cart</h2>
+        <div className="fixed bottom-0 left-0 right-0 bg-white border-t p-4 shadow-md">
+          <h2 className="font-semibold mb-2">{t('cart')}</h2>
           <ul className="space-y-1">
             {Object.entries(items)
               .filter(([, qty]) => qty > 0)
               .map(([id, qty]) => {
                 const prod = data?.find((d) => d.id === Number(id));
                 return (
-                  <li key={id}>
-                    {prod?.name || id} x {qty}
+                  <li key={id} className="flex justify-between items-center">
+                    <span>
+                      {prod?.name || id} x {qty}
+                    </span>
+                    <button
+                      type="button"
+                      className="text-red-600 p-1"
+                      onClick={() => {
+                        const newItems = { ...items } as Record<number, number>;
+                        delete newItems[Number(id)];
+                        setItems(newItems);
+                      }}
+                    >
+                      <TrashIcon className="w-4 h-4" />
+                    </button>
                   </li>
                 );
               })}
           </ul>
+          <button
+            onClick={create}
+            className="mt-2 bg-blue-500 text-white px-4 py-2 rounded-md w-full"
+          >
+            {t('createOrder')}
+          </button>
         </div>
       )}
-      <button onClick={create} className="mt-4 bg-blue-500 text-white px-4 py-2">
-        {t('createOrder')}
-      </button>
     </Layout>
   );
 }

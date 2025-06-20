@@ -73,6 +73,12 @@ export async function fetchProducts(config?: Partial<WooConfig>): Promise<any[]>
   return request<any[]>('products', config);
 }
 
+export async function fetchCategories(
+  config?: Partial<WooConfig>
+): Promise<any[]> {
+  return request<any[]>('products/categories', config);
+}
+
 export async function fetchOrders(config?: Partial<WooConfig>): Promise<any[]> {
   return request<any[]>('orders', config);
 }
