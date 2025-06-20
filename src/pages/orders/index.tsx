@@ -26,12 +26,13 @@ export default function Orders() {
   const { status } = useSession();
   const router = useRouter();
   const [stores, setStores] = useState<Store[]>([]);
-  if (status === 'loading') return null;
-  if (status === 'unauthenticated') {
-    router.replace('/login');
-    return null;
-  }
   const [selected, setSelected] = useState<Store | null>(null);
+
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      router.replace('/login');
+    }
+  }, [status, router]);
 
   useEffect(() => {
     const saved = localStorage.getItem('wooStores');
@@ -41,6 +42,8 @@ export default function Orders() {
       if (parsed.length > 0) setSelected(parsed[0]);
     }
   }, []);
+
+  if (status === 'loading' || status === 'unauthenticated') return null;
 
   const query = selected
     ? `/api/orders?baseUrl=${encodeURIComponent(selected.baseUrl)}&key=${selected.key}&secret=${selected.secret}`
@@ -59,6 +62,12 @@ export default function Orders() {
   return (
     <Layout>
       <h1 className="text-2xl font-bold mb-4">Orders</h1>
+      <Link
+        href="/orders/create"
+        className="inline-block mb-4 bg-blue-500 text-white px-4 py-2 rounded"
+      >
+        Create Order
+      </Link>
       <div className="mb-4">
         <select
           className="border p-2"
