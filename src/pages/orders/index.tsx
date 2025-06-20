@@ -46,17 +46,18 @@ export default function Orders() {
 
   const { data, error } = useSWR<Order[]>(query, fetcher);
 
-  if (error) return <div>Error loading orders.</div>;
+  if (error) return <div className="dark:text-gray-100">Error loading orders.</div>;
   if (!selected) return (
     <Layout>
-      <p>{t('noStore')}</p>
+      <p className="dark:text-gray-100">{t('noStore')}</p>
     </Layout>
   );
-  if (!data) return <div>{t('loading')}</div>;
+  if (!data) return <div className="dark:text-gray-100">{t('loading')}</div>;
 
   return (
     <Layout>
-      <h1 className="text-2xl font-bold mb-4">{t('orders')}</h1>
+      <div className="bg-white dark:bg-gray-900 p-4 rounded">
+      <h1 className="text-2xl font-bold mb-4 dark:text-gray-100">{t('orders')}</h1>
       <Link
         href="/orders/create"
         className="inline-block mb-4 bg-blue-500 dark:bg-blue-600 text-white px-4 py-2 rounded"
@@ -80,7 +81,7 @@ export default function Orders() {
         </select>
       </div>
       {data.length === 0 ? (
-        <p>{t('noOrders')}</p>
+        <p className="dark:text-gray-100">{t('noOrders')}</p>
       ) : (
         <ul className="space-y-2">
           {data.map((order) => (
@@ -88,11 +89,17 @@ export default function Orders() {
               key={order.id}
               className="border border-gray-300 dark:border-gray-600 p-2 rounded bg-white dark:bg-gray-800"
             >
-              <Link href={`/orders/${order.id}`}>{t('order')} #{order.id}</Link>
+              <Link
+                href={`/orders/${order.id}`}
+                className="dark:text-gray-100"
+              >
+                {t('order')} #{order.id}
+              </Link>
             </li>
           ))}
         </ul>
       )}
+      </div>
     </Layout>
   );
 }
