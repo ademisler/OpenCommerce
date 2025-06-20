@@ -59,13 +59,13 @@ export default function Orders() {
       <h1 className="text-2xl font-bold mb-4">{t('orders')}</h1>
       <Link
         href="/orders/create"
-        className="inline-block mb-4 bg-blue-500 text-white px-4 py-2 rounded"
+        className="inline-block mb-4 bg-blue-500 dark:bg-blue-600 text-white px-4 py-2 rounded"
       >
         {t('createOrder')}
       </Link>
       <div className="mb-4">
         <select
-          className="border p-2"
+          className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 p-2"
           value={selected?.id ?? ''}
           onChange={(e) => {
             const store = stores.find((s) => s.id === Number(e.target.value));
@@ -79,13 +79,20 @@ export default function Orders() {
           ))}
         </select>
       </div>
-      <ul className="space-y-2">
-        {data.map((order) => (
-          <li key={order.id} className="border p-2 rounded">
-            <Link href={`/orders/${order.id}`}>{t('order')} #{order.id}</Link>
-          </li>
-        ))}
-      </ul>
+      {data.length === 0 ? (
+        <p>{t('noOrders')}</p>
+      ) : (
+        <ul className="space-y-2">
+          {data.map((order) => (
+            <li
+              key={order.id}
+              className="border border-gray-300 dark:border-gray-600 p-2 rounded bg-white dark:bg-gray-800"
+            >
+              <Link href={`/orders/${order.id}`}>{t('order')} #{order.id}</Link>
+            </li>
+          ))}
+        </ul>
+      )}
     </Layout>
   );
 }
