@@ -15,12 +15,8 @@ export default function Dashboard() {
 
   const fetcher = <T,>(url: string): Promise<T> => fetch(url).then(res => res.json());
 
-  const ordersQuery = selected
-    ? `/api/orders?baseUrl=${encodeURIComponent(selected.baseUrl)}&key=${selected.key}&secret=${selected.secret}`
-    : null;
-  const productsQuery = selected
-    ? `/api/products?baseUrl=${encodeURIComponent(selected.baseUrl)}&key=${selected.key}&secret=${selected.secret}`
-    : null;
+  const ordersQuery = selected ? `/api/orders?storeId=${selected.id}` : null;
+  const productsQuery = selected ? `/api/products?storeId=${selected.id}` : null;
 
   const { data: orders } = useSWR<any[]>(ordersQuery, fetcher);
   const { data: products } = useSWR<any[]>(productsQuery, fetcher);

@@ -34,9 +34,7 @@ export default function OrderDetail() {
   }, [stores]);
 
   const query =
-    id && store
-      ? `/api/orders/${id}?baseUrl=${encodeURIComponent(store.baseUrl)}&key=${store.key}&secret=${store.secret}`
-      : null;
+    id && store ? `/api/orders/${id}?storeId=${store.id}` : null;
 
   const { data, error } = useSWR(query, fetcher);
 

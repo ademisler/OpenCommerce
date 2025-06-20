@@ -3,6 +3,9 @@ import {
   fetchOrders as fetchWooOrders,
   WooConfig,
 } from '../../../lib/integrations/woocommerceService';
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from '../auth/[...nextauth]';
+import { sbRequest } from '../../../lib/supabase';
 
 export type Order = {
   id: number;
@@ -15,21 +18,35 @@ export default async function handler(
   res: NextApiResponse<Order | { error: string }>
 ) {
   try {
-    const { id, baseUrl, key, secret } = req.query as {
-      id?: string;
-      baseUrl?: string;
-      key?: string;
-      secret?: string;
-    };
+    const session = await getServerSession(req, res, authOptions);
+    if (!session || !session.user?.email) {
+      return res.status(401).json({ error: 'Unauthenticated' });
+    }
 
-    const config =
-      baseUrl && key && secret
-        ? {
-            baseUrl,
-            consumerKey: key,
-            consumerSecret: secret,
-          }
-        : undefined;
+    const { id, storeId } = req.query as {
+      id?: string;
+      storeId?: string;
+    };
+    if (!storeId) {
+      return res.status(400).json({ error: 'Missing storeId' });
+    }
+
+    const rows = await sbRequest<any[]>(
+      'GET',
+      'woo_stores',
+      undefined,
+      `?id=eq.${storeId}&email=eq.${session.user.email}&limit=1`
+    );
+    const store = rows[0];
+    if (!store) {
+      return res.status(404).json({ error: 'Store not found' });
+    }
+
+    const config: WooConfig = {
+      baseUrl: store.base_url,
+      consumerKey: store.key,
+      consumerSecret: store.secret,
+    };
 
     const wooOrders = await fetchWooOrders(config);
     const order = wooOrders.find((o: any) => o.id === Number(id));

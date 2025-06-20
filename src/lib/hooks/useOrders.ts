@@ -1,11 +1,7 @@
 import useSWR from 'swr';
-import { WooConfig } from '../integrations/woocommerceService';
-
 const fetcher = (url: string) => fetch(url).then(res => res.json());
 
-export default function useOrders(config?: WooConfig) {
-  const query = config
-    ? `/api/orders?baseUrl=${encodeURIComponent(config.baseUrl)}&key=${config.consumerKey}&secret=${config.consumerSecret}`
-    : '/api/orders';
+export default function useOrders(storeId?: number) {
+  const query = storeId !== undefined ? `/api/orders?storeId=${storeId}` : null;
   return useSWR(query, fetcher);
 }

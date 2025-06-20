@@ -53,9 +53,7 @@ export default function CreateOrder() {
     if (stores && stores.length > 0) setSelected(stores[0]);
   }, [stores]);
 
-  const query = selected
-    ? `/api/products?baseUrl=${encodeURIComponent(selected.baseUrl)}&key=${selected.key}&secret=${selected.secret}`
-    : null;
+  const query = selected ? `/api/products?storeId=${selected.id}` : null;
   const { data } = useSWR<Product[]>(query, fetcher);
 
   const create = async () => {
@@ -64,8 +62,7 @@ export default function CreateOrder() {
       .filter(([, qty]) => qty > 0)
       .map(([id, qty]) => ({ product_id: Number(id), quantity: qty }));
     if (lineItems.length === 0) return;
-    await fetch(
-      `/api/orders/create?baseUrl=${encodeURIComponent(selected.baseUrl)}&key=${selected.key}&secret=${selected.secret}`,
+    await fetch(`/api/orders/create?storeId=${selected.id}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
