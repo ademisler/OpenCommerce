@@ -3,7 +3,7 @@ import Layout from '../../components/Layout';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { useI18n } from '../../lib/i18n';
-import useStores, { Store } from '../../lib/hooks/useStores';
+import useStores from '../../lib/hooks/useStores';
 
 interface Store {
   id: number;
