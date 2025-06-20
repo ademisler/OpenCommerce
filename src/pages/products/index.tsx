@@ -36,9 +36,7 @@ export default function Products() {
 
   if (status === 'loading' || status === 'unauthenticated') return null;
 
-  const query = selected
-    ? `/api/products?baseUrl=${encodeURIComponent(selected.baseUrl)}&key=${selected.key}&secret=${selected.secret}`
-    : null;
+  const query = selected ? `/api/products?storeId=${selected.id}` : null;
 
   const { data, error } = useSWR<Product[]>(query, fetcher);
 

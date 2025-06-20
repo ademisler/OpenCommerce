@@ -1,11 +1,8 @@
 import useSWR from 'swr';
-import { WooConfig } from '../integrations/woocommerceService';
-
 const fetcher = (url: string) => fetch(url).then(res => res.json());
 
-export default function useProducts(config?: WooConfig) {
-  const query = config
-    ? `/api/products?baseUrl=${encodeURIComponent(config.baseUrl)}&key=${config.consumerKey}&secret=${config.consumerSecret}`
-    : '/api/products';
+export default function useProducts(storeId?: number) {
+  const query =
+    storeId !== undefined ? `/api/products?storeId=${storeId}` : null;
   return useSWR(query, fetcher);
 }

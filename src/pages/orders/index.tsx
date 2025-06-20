@@ -43,9 +43,7 @@ export default function Orders() {
 
   if (status === 'loading' || status === 'unauthenticated') return null;
 
-  const query = selected
-    ? `/api/orders?baseUrl=${encodeURIComponent(selected.baseUrl)}&key=${selected.key}&secret=${selected.secret}`
-    : null;
+  const query = selected ? `/api/orders?storeId=${selected.id}` : null;
 
   const { data, error } = useSWR<Order[]>(query, fetcher);
 
