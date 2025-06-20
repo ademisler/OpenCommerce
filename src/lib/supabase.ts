@@ -1,5 +1,15 @@
 export const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
+const SUPABASE_KEY =
+  process.env.SUPABASE_SERVICE_ROLE_KEY ||
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
+  '';
+
+function ensureConfig() {
+  if (!SUPABASE_URL || !SUPABASE_KEY) {
+    throw new Error('Supabase environment variables are missing');
+  }
+  return { url: SUPABASE_URL, key: SUPABASE_KEY };
+}
 
 export async function sbRequest<T>(
   method: string,
@@ -7,12 +17,13 @@ export async function sbRequest<T>(
   body?: unknown,
   query?: string
 ): Promise<T> {
-  const url = `${SUPABASE_URL}/rest/v1/${path}${query || ''}`;
-  const res = await fetch(url, {
+  const { url, key } = ensureConfig();
+  const reqUrl = `${url}/rest/v1/${path}${query || ''}`;
+  const res = await fetch(reqUrl, {
     method,
     headers: {
-      apikey: SUPABASE_KEY,
-      Authorization: `Bearer ${SUPABASE_KEY}`,
+      apikey: key,
+      Authorization: `Bearer ${key}`,
       'Content-Type': 'application/json',
       ...(method === 'POST' ? { Prefer: 'return=representation' } : {}),
     },
