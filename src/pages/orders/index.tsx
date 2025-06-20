@@ -1,6 +1,7 @@
 import Layout from '../../components/Layout';
 import Link from 'next/link';
 import useSWR from 'swr';
+import { fetcher } from '../../lib/fetcher';
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
@@ -21,8 +22,6 @@ interface Order {
   total: number;
 }
 
-const fetcher = <T,>(url: string): Promise<T> =>
-  fetch(url).then((res) => res.json());
 
 export default function Orders() {
   const { status } = useSession();

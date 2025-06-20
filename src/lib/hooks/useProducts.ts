@@ -1,5 +1,5 @@
 import useSWR from 'swr';
-const fetcher = (url: string) => fetch(url).then(res => res.json());
+import { fetcher } from '../fetcher';
 
 export default function useProducts(storeId?: number) {
   const query =

@@ -3,6 +3,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
 import useSWR from 'swr';
+import { fetcher } from '../lib/fetcher';
 import { useI18n } from '../lib/i18n';
 import useStores, { Store } from '../lib/hooks/useStores';
 
@@ -13,7 +14,6 @@ export default function Dashboard() {
   const { data: stores = [] } = useStores();
   const [selected, setSelected] = useState<Store | null>(null);
 
-  const fetcher = <T,>(url: string): Promise<T> => fetch(url).then(res => res.json());
 
   const ordersQuery = selected ? `/api/orders?storeId=${selected.id}` : null;
   const productsQuery = selected ? `/api/products?storeId=${selected.id}` : null;

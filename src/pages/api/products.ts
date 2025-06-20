@@ -13,12 +13,18 @@ const fallbackProducts: Product[] = [
     name: 'Example Product',
     stock: 10,
     image: 'https://via.placeholder.com/80',
+    categories: [],
+    weight: '',
+    dimensions: { length: '', width: '', height: '' },
   },
   {
     id: 2,
     name: 'Demo Product',
     stock: 5,
     image: 'https://via.placeholder.com/80',
+    categories: [],
+    weight: '',
+    dimensions: { length: '', width: '', height: '' },
   },
 ];
 
@@ -27,6 +33,9 @@ export type Product = {
   name: string;
   stock: number;
   image: string;
+  categories: string[];
+  weight: string;
+  dimensions: { length: string; width: string; height: string };
 };
 
 export default async function handler(
@@ -67,6 +76,13 @@ export default async function handler(
       name: p.name,
       stock: p.stock_quantity ?? 0,
       image: p.images?.[0]?.src || 'https://via.placeholder.com/80',
+      categories: (p.categories || []).map((c: any) => c.name),
+      weight: p.weight || '',
+      dimensions: {
+        length: p.dimensions?.length || '',
+        width: p.dimensions?.width || '',
+        height: p.dimensions?.height || '',
+      },
     }));
     res.status(200).json(products);
   } catch (error) {

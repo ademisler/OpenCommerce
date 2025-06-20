@@ -2,6 +2,8 @@
 
 Fulexo is a multi-channel e-commerce management platform built with Next.js and TypeScript. This repository contains the initial project structure with mock data and placeholder integrations.
 
+The project is distributed under the MIT License (see `LICENSE`). A `package-lock.json` is provided for reproducible installs.
+
 ## Setup
 
 1. Install dependencies and start the development server:

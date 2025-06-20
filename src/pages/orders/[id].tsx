@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router';
 import Layout from '../../components/Layout';
 import useSWR from 'swr';
+import { fetcher } from '../../lib/fetcher';
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useI18n } from '../../lib/i18n';
@@ -14,7 +15,6 @@ interface Store {
   secret: string;
 }
 
-const fetcher = (url: string) => fetch(url).then(res => res.json());
 
 export default function OrderDetail() {
   const { status } = useSession();
@@ -36,7 +36,13 @@ export default function OrderDetail() {
   const query =
     id && store ? `/api/orders/${id}?storeId=${store.id}` : null;
 
-  const { data, error } = useSWR(query, fetcher);
+  interface OrderData {
+    id: number;
+    status: string;
+    total: number;
+  }
+
+  const { data, error } = useSWR<OrderData>(query, fetcher);
 
   if (error) return <div>Error loading order.</div>;
   if (!store) return <div>{t('noStore')}</div>;
