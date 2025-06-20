@@ -76,14 +76,20 @@ export interface OrderItem {
 export interface CustomerInfo {
   first_name: string;
   last_name: string;
-  email: string;
+  company?: string;
+  country?: string;
   address_1: string;
+  address_2?: string;
+  postcode?: string;
   city: string;
+  phone?: string;
+  email: string;
 }
 
 export async function createOrder(
   items: OrderItem[],
   customer?: CustomerInfo,
+  note?: string,
   config?: Partial<WooConfig>
 ): Promise<any> {
   return request<any>('orders', config, {
@@ -91,6 +97,7 @@ export async function createOrder(
     body: JSON.stringify({
       line_items: items,
       ...(customer ? { billing: customer, shipping: customer } : {}),
+      ...(note ? { customer_note: note } : {}),
     }),
   });
 }

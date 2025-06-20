@@ -3,6 +3,7 @@ import useSWR from 'swr';
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
+import { useI18n } from '../../lib/i18n';
 
 interface Store {
   id: number;
@@ -27,6 +28,7 @@ export default function Products() {
   const [stores, setStores] = useState<Store[]>([]);
   const [selected, setSelected] = useState<Store | null>(null);
   const [search, setSearch] = useState('');
+  const { t } = useI18n();
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -54,10 +56,10 @@ export default function Products() {
   if (error) return <div>Error loading products.</div>;
   if (!selected) return (
     <Layout>
-      <p>No WooCommerce store configured.</p>
+      <p>{t('noStore')}</p>
     </Layout>
   );
-  if (!data) return <div>Loading...</div>;
+  if (!data) return <div>{t('loading')}</div>;
 
   const filtered = data.filter((p) =>
     p.name.toLowerCase().includes(search.toLowerCase())
@@ -65,7 +67,7 @@ export default function Products() {
 
   return (
     <Layout>
-      <h1 className="text-2xl font-bold mb-4">Products</h1>
+      <h1 className="text-2xl font-bold mb-4">{t('products')}</h1>
       <div className="mb-4">
         <select
           className="border p-2"
@@ -85,7 +87,7 @@ export default function Products() {
       <div className="mb-4">
         <input
           className="border p-2 w-full"
-          placeholder="Search products"
+          placeholder={t('searchProducts')}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />

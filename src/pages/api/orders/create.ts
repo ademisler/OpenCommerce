@@ -34,7 +34,8 @@ export default async function handler(
       ? req.body.items
       : [];
     const customer: CustomerInfo | undefined = req.body?.customer;
-    const order = await wooCreateOrder(items, customer, config);
+    const note: string | undefined = req.body?.note;
+    const order = await wooCreateOrder(items, customer, note, config);
     res.status(200).json({ id: order.id });
   } catch (error) {
     console.error('Failed to create order in WooCommerce:', error);
