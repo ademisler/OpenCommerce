@@ -36,6 +36,7 @@ Fulexo is a multi-channel e-commerce management platform built with Next.js and 
    ```env
    AUTH_EMAIL=admin@example.com
    AUTH_PASSWORD=changeme
+   NEXTAUTH_SECRET=super-secret-key
    ```
 
 ## Project Structure
