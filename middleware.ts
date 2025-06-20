@@ -8,11 +8,6 @@ export default withAuth({
 
 export const config = {
   matcher: [
-    '/dashboard',
-    '/products/:path*',
-    '/orders/:path*',
-    '/integrations/:path*',
-    '/automations',
-    '/profile',
+    '/((?!api|_next/static|_next/image|favicon.ico|login).*)',
   ],
 };
