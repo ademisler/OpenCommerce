@@ -7,7 +7,7 @@ interface Props {
 
 function ErrorPage({ statusCode }: Props) {
   return (
-    <Layout>
+    <Layout title="Error">
       <h1 className="text-2xl font-bold mb-4">An error occurred</h1>
       {statusCode && <p>Status Code: {statusCode}</p>}
       <p>Please try again later.</p>

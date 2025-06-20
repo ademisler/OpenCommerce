@@ -49,7 +49,7 @@ export default function Profile() {
   }
 
   return (
-    <Layout>
+    <Layout title={t('profile')}>
       <h1 className="text-2xl font-bold mb-4">{t('profile')}</h1>
       <div className="space-y-4 max-w-sm">
         <div>

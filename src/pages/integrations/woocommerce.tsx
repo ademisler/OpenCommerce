@@ -69,7 +69,7 @@ export default function WooCommerceIntegrations() {
   };
 
   return (
-    <Layout>
+    <Layout title={t('wooStores')}>
       <h1 className="text-2xl font-bold mb-4">{t('wooStores')}</h1>
       <div className="mb-6 space-y-4">
         <div>

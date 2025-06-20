@@ -72,6 +72,8 @@ const translations: Record<Lang, Record<string, string>> = {
     theme: 'Toggle Theme',
     deleteOrder: 'Delete Order',
     updateStatus: 'Update Status',
+    shippingCompany: 'Shipping Company',
+    trackingNumber: 'Tracking Number',
   },
   tr: {
     dashboard: 'Kontrol Paneli',
@@ -142,6 +144,8 @@ const translations: Record<Lang, Record<string, string>> = {
     theme: 'Tema Değiştir',
     deleteOrder: 'Siparişi Sil',
     updateStatus: 'Durumu Güncelle',
+    shippingCompany: 'Kargo Firması',
+    trackingNumber: 'Takip Numarası',
   },
   fr: {
     dashboard: 'Tableau de bord',
@@ -212,6 +216,8 @@ const translations: Record<Lang, Record<string, string>> = {
     theme: 'Changer le thème',
     deleteOrder: 'Supprimer la commande',
     updateStatus: 'Mettre à jour le statut',
+    shippingCompany: 'Transporteur',
+    trackingNumber: 'Numéro de suivi',
   }
 };
 

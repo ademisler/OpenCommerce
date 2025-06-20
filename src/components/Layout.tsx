@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Head from 'next/head';
 import Link from 'next/link';
 import { useSession, signOut } from 'next-auth/react';
 import { useI18n, Lang } from '../lib/i18n';
@@ -7,9 +8,9 @@ import { SunIcon, MoonIcon, MenuIcon, XIcon } from './Icons';
 
 interface Props {
   children: React.ReactNode;
+  title?: string;
 }
-
-const Layout: React.FC<Props> = ({ children }) => {
+const Layout: React.FC<Props> = ({ children, title }) => {
   const { data: session } = useSession();
   const { t, lang, setLang } = useI18n();
   const { theme, toggleTheme } = useTheme();
@@ -31,7 +32,11 @@ const Layout: React.FC<Props> = ({ children }) => {
   const imageSrc = profile.image || session?.user?.image || 'https://via.placeholder.com/32';
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100">
+    <>
+      <Head>
+        <title>{title ? `${title} - Fulexo` : 'Fulexo'}</title>
+      </Head>
+      <div className="min-h-screen flex flex-col bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100">
       <header className="bg-gray-800 text-white dark:bg-gray-700">
         <nav className="flex justify-between items-center container mx-auto p-4 relative">
           <button
@@ -106,7 +111,8 @@ const Layout: React.FC<Props> = ({ children }) => {
         )}
       </header>
       <main className="flex-1 p-4 container mx-auto">{children}</main>
-    </div>
+      </div>
+    </>
   );
 };
 

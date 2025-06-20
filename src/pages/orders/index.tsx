@@ -48,14 +48,14 @@ export default function Orders() {
 
   if (error) return <div className="dark:text-gray-100">Error loading orders.</div>;
   if (!selected) return (
-    <Layout>
+    <Layout title={t('orders')}>
       <p className="dark:text-gray-100">{t('noStore')}</p>
     </Layout>
   );
   if (!data) return <div className="dark:text-gray-100">{t('loading')}</div>;
 
   return (
-    <Layout>
+    <Layout title={t('orders')}>
       <div className="bg-white dark:bg-gray-900 p-4 rounded">
       <h1 className="text-2xl font-bold mb-4 dark:text-gray-100">{t('orders')}</h1>
       <Link

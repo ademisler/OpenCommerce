@@ -14,7 +14,7 @@ export default function Integrations() {
     return null;
   }
   return (
-    <Layout>
+    <Layout title={t('integrations')}>
       <h1 className="text-2xl font-bold mb-4">{t('integrations')}</h1>
       <p className="mb-4">{t('manageIntegrations')}</p>
       <ul className="space-y-2">

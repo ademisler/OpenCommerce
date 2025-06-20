@@ -22,7 +22,7 @@ export default function Login() {
   };
 
   return (
-    <Layout>
+    <Layout title={t('login')}>
       <div className="max-w-sm mx-auto">
         <h1 className="text-2xl font-bold mb-4">{t('login')}</h1>
         <form onSubmit={handleSubmit} className="space-y-4">

@@ -33,7 +33,7 @@ export default function Dashboard() {
   }, [stores]);
 
   return (
-    <Layout>
+    <Layout title={t('dashboard')}>
       <h1 className="text-2xl font-bold mb-4">{t('dashboard')}</h1>
       {stores.length > 0 && (
         <div className="mb-6">

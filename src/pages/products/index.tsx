@@ -60,7 +60,7 @@ export default function Products() {
 
   if (error) return <div>Error loading products.</div>;
   if (!selected) return (
-    <Layout>
+    <Layout title={t('products')}>
       <p>{t('noStore')}</p>
     </Layout>
   );
@@ -71,7 +71,7 @@ export default function Products() {
   );
 
   return (
-    <Layout>
+    <Layout title={t('products')}>
       <h1 className="text-2xl font-bold mb-4">{t('products')}</h1>
       <div className="mb-4">
         <select

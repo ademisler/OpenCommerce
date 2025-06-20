@@ -76,7 +76,7 @@ export default function CreateOrder() {
   };
 
   return (
-    <Layout>
+    <Layout title={t('createOrder')}>
       <h1 className="text-2xl font-bold mb-4">{t('createOrder')}</h1>
       <div className="mb-4">
         <select
