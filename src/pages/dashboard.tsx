@@ -7,11 +7,6 @@ export default function Dashboard() {
   const { status } = useSession();
   const router = useRouter();
   const [stores, setStores] = useState<{ id: number; name: string; baseUrl: string }[]>([]);
-  if (status === 'loading') return null;
-  if (status === 'unauthenticated') {
-    router.replace('/login');
-    return null;
-  }
 
   useEffect(() => {
     const saved = localStorage.getItem('wooStores');
