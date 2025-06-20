@@ -44,6 +44,13 @@ export default async function handler(
     res.status(200).json(orders);
   } catch (error) {
     console.error('Failed to fetch orders from WooCommerce:', error);
-    res.status(200).json(fallbackOrders);
+    if (
+      error instanceof Error &&
+      error.message.startsWith('Missing WooCommerce configuration')
+    ) {
+      res.status(400).json({ error: error.message });
+    } else {
+      res.status(200).json(fallbackOrders);
+    }
   }
 }

@@ -29,13 +29,22 @@ function authHeader(config: WooConfig): string {
 }
 
 function getConfig(config?: Partial<WooConfig>): WooConfig {
-  if (config && config.baseUrl && config.consumerKey && config.consumerSecret) {
-    return config as WooConfig;
+  const merged: Partial<WooConfig> = {
+    ...(envConfig ?? {}),
+    ...(config ?? {}),
+  };
+
+  if (!merged.baseUrl) {
+    throw new Error('Missing WooCommerce configuration: baseUrl');
   }
-  if (!envConfig) {
-    throw new Error('WooCommerce environment variables are not configured');
+  if (!merged.consumerKey) {
+    throw new Error('Missing WooCommerce configuration: consumerKey');
   }
-  return envConfig;
+  if (!merged.consumerSecret) {
+    throw new Error('Missing WooCommerce configuration: consumerSecret');
+  }
+
+  return merged as WooConfig;
 }
 
 async function request<T>(
