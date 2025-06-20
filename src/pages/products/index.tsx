@@ -19,7 +19,7 @@ const fetcher = <T,>(url: string): Promise<T> => fetch(url).then((res) => res.js
 export default function Products() {
   const { status } = useSession();
   const router = useRouter();
-  const { data: stores } = useStores();
+  const { data: stores = [] } = useStores();
   const [selected, setSelected] = useState<Store | null>(null);
   const [search, setSearch] = useState('');
   const { t } = useI18n();

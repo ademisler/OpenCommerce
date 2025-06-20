@@ -31,7 +31,7 @@ const fetcher = <T,>(url: string): Promise<T> => fetch(url).then((res) => res.js
 export default function CreateOrder() {
   const { status } = useSession();
   const router = useRouter();
-  const { data: stores } = useStores();
+  const { data: stores = [] } = useStores();
   const [selected, setSelected] = useState<Store | null>(null);
   const [items, setItems] = useState<Record<number, number>>({});
   const { t } = useI18n();
