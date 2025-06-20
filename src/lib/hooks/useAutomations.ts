@@ -30,5 +30,9 @@ export default function useAutomations() {
     setAutomations([...automations, { ...a, id: Date.now() }]);
   };
 
-  return { automations, addAutomation };
+  const removeAutomation = (id: number) => {
+    setAutomations(automations.filter((a) => a.id !== id));
+  };
+
+  return { automations, addAutomation, removeAutomation };
 }
