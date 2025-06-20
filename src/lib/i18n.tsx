@@ -53,6 +53,7 @@ const translations: Record<Lang, Record<string, string>> = {
     baseUrl: 'Base URL',
     consumerKey: 'Consumer Key',
     consumerSecret: 'Consumer Secret',
+    remove: 'Remove',
     automationsIntro: 'Define automation rules for orders and products.'
   },
   tr: {
@@ -105,6 +106,7 @@ const translations: Record<Lang, Record<string, string>> = {
     baseUrl: 'Temel URL',
     consumerKey: 'Tüketici Anahtarı',
     consumerSecret: 'Tüketici Gizli Anahtarı',
+    remove: 'Sil',
     automationsIntro: 'Siparişler ve ürünler için otomasyon kuralları tanımlayın.'
   },
   fr: {
@@ -157,6 +159,7 @@ const translations: Record<Lang, Record<string, string>> = {
     baseUrl: 'URL de base',
     consumerKey: 'Clé consommateur',
     consumerSecret: 'Secret consommateur',
+    remove: 'Supprimer',
     automationsIntro: 'Définissez des règles d\'automatisation pour les commandes et les produits.'
   }
 };

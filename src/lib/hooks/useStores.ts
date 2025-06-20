@@ -1,4 +1,5 @@
 import useSWR from 'swr';
+import { fetcher } from '../fetcher';
 
 export interface Store {
   id: number;
@@ -8,15 +9,13 @@ export interface Store {
   secret: string;
 }
 
-const fetcher = (url: string) =>
-  fetch(url)
-    .then(res => res.json())
-    .then((rows) =>
-      Array.isArray(rows)
-        ? rows.map(({ base_url, ...r }) => ({ ...r, baseUrl: base_url }))
-        : rows
-    );
+const storeFetcher = (url: string) =>
+  fetcher<any[]>(url).then((rows) =>
+    Array.isArray(rows)
+      ? rows.map(({ base_url, ...r }) => ({ ...r, baseUrl: base_url }))
+      : rows
+  );
 
 export default function useStores() {
-  return useSWR<Store[]>('/api/stores', fetcher);
+  return useSWR<Store[]>('/api/stores', storeFetcher);
 }

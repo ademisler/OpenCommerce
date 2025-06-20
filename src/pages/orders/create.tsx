@@ -3,6 +3,7 @@ import Layout from '../../components/Layout';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import useSWR from 'swr';
+import { fetcher } from '../../lib/fetcher';
 import { useI18n } from '../../lib/i18n';
 import useStores from '../../lib/hooks/useStores';
 import { europeanCountries } from '../../utils/europeanCountries';
@@ -27,7 +28,6 @@ interface OrderItem {
   quantity: number;
 }
 
-const fetcher = <T,>(url: string): Promise<T> => fetch(url).then((res) => res.json());
 
 export default function CreateOrder() {
   const { status } = useSession();
@@ -35,6 +35,7 @@ export default function CreateOrder() {
   const { data: stores = [] } = useStores();
   const [selected, setSelected] = useState<Store | null>(null);
   const [items, setItems] = useState<Record<number, number>>({});
+  const [productSearch, setProductSearch] = useState('');
   const { t } = useI18n();
   const [customer, setCustomer] = useState({
     first_name: '',
@@ -166,26 +167,61 @@ export default function CreateOrder() {
           onChange={(e) => setNote(e.target.value)}
         />
       </div>
+      <div className="mb-4">
+        <input
+          className="border p-2 w-full"
+          placeholder={t('searchProducts')}
+          value={productSearch}
+          onChange={(e) => setProductSearch(e.target.value)}
+        />
+      </div>
       {!data ? (
         <p>{t('loadingProducts')}</p>
       ) : (
         <div className="space-y-2">
-          {data.map((p) => (
-            <div key={p.id} className="flex items-center space-x-4 border p-2 rounded">
-              <img src={p.image} alt={p.name} className="w-16 h-16 object-cover" />
-              <div className="flex-1">
-                <p className="font-medium">{p.name}</p>
-                <p className="text-sm text-gray-600">Stock: {p.stock}</p>
+          {data
+            .filter((p) => p.name.toLowerCase().includes(productSearch.toLowerCase()))
+            .map((p) => (
+              <div key={p.id} className="flex items-center space-x-4 border p-2 rounded">
+                <img src={p.image} alt={p.name} className="w-16 h-16 object-cover" />
+                <div className="flex-1">
+                  <p className="font-medium">{p.name}</p>
+                  <p className="text-sm text-gray-600">Stock: {p.stock}</p>
+                </div>
+                <input
+                  type="number"
+                  min="0"
+                  className="border p-1 w-20"
+                  value={items[p.id] ?? 0}
+                  onChange={(e) => setItems({ ...items, [p.id]: Number(e.target.value) })}
+                />
+                <button
+                  className="bg-green-500 text-white px-2 py-1"
+                  onClick={() => {
+                    setItems({ ...items, [p.id]: (items[p.id] ?? 0) + 1 });
+                  }}
+                >
+                  Add
+                </button>
               </div>
-              <input
-                type="number"
-                min="0"
-                className="border p-1 w-20"
-                value={items[p.id] ?? 0}
-                onChange={(e) => setItems({ ...items, [p.id]: Number(e.target.value) })}
-              />
-            </div>
-          ))}
+            ))}
+        </div>
+      )}
+      {Object.keys(items).length > 0 && (
+        <div className="mt-4 border p-2 rounded">
+          <h2 className="font-semibold mb-2">Cart</h2>
+          <ul className="space-y-1">
+            {Object.entries(items)
+              .filter(([, qty]) => qty > 0)
+              .map(([id, qty]) => {
+                const prod = data?.find((d) => d.id === Number(id));
+                return (
+                  <li key={id}>
+                    {prod?.name || id} x {qty}
+                  </li>
+                );
+              })}
+          </ul>
         </div>
       )}
       <button onClick={create} className="mt-4 bg-blue-500 text-white px-4 py-2">
