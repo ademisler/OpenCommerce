@@ -5,14 +5,25 @@ import {
 } from '../../lib/integrations/woocommerceService';
 
 const fallbackProducts: Product[] = [
-  { id: 1, name: 'Example Product', stock: 10 },
-  { id: 2, name: 'Demo Product', stock: 5 },
+  {
+    id: 1,
+    name: 'Example Product',
+    stock: 10,
+    image: 'https://via.placeholder.com/80',
+  },
+  {
+    id: 2,
+    name: 'Demo Product',
+    stock: 5,
+    image: 'https://via.placeholder.com/80',
+  },
 ];
 
 export type Product = {
   id: number;
   name: string;
   stock: number;
+  image: string;
 };
 
 export default async function handler(
@@ -40,6 +51,7 @@ export default async function handler(
       id: p.id,
       name: p.name,
       stock: p.stock_quantity ?? 0,
+      image: p.images?.[0]?.src || 'https://via.placeholder.com/80',
     }));
     res.status(200).json(products);
   } catch (error) {

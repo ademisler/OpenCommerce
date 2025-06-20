@@ -38,7 +38,11 @@ function getConfig(config?: Partial<WooConfig>): WooConfig {
   return envConfig;
 }
 
-async function request<T>(endpoint: string, config?: Partial<WooConfig>): Promise<T> {
+async function request<T>(
+  endpoint: string,
+  config?: Partial<WooConfig>,
+  options?: RequestInit
+): Promise<T> {
   const cfg = getConfig(config);
 
   const res = await fetch(`${cfg.baseUrl}/wp-json/wc/v3/${endpoint}`, {
@@ -46,6 +50,7 @@ async function request<T>(endpoint: string, config?: Partial<WooConfig>): Promis
       Authorization: authHeader(cfg),
       'Content-Type': 'application/json',
     },
+    ...options,
   });
 
   if (!res.ok) {
@@ -61,6 +66,21 @@ export async function fetchProducts(config?: Partial<WooConfig>): Promise<any[]>
 
 export async function fetchOrders(config?: Partial<WooConfig>): Promise<any[]> {
   return request<any[]>('orders', config);
+}
+
+export interface OrderItem {
+  product_id: number;
+  quantity: number;
+}
+
+export async function createOrder(
+  items: OrderItem[],
+  config?: Partial<WooConfig>
+): Promise<any> {
+  return request<any>('orders', config, {
+    method: 'POST',
+    body: JSON.stringify({ line_items: items }),
+  });
 }
 
 export async function syncStock() {
