@@ -60,7 +60,7 @@ export default function Orders() {
       <h1 className="text-2xl font-bold mb-4 dark:text-gray-100">{t('orders')}</h1>
       <Link
         href="/orders/create"
-        className="inline-block mb-4 bg-blue-500 dark:bg-blue-600 text-white px-4 py-2 rounded"
+        className="inline-block mb-4 bg-blue-600 dark:bg-blue-500 text-white px-4 py-2 rounded"
       >
         {t('createOrder')}
       </Link>

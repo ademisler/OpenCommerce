@@ -39,7 +39,7 @@ export default function Login() {
       <Head>
         <title>{`${t('login')} - Fulexo`}</title>
       </Head>
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-sky-500 via-blue-600 to-purple-700">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-500 via-blue-600 to-blue-700">
         <div className="w-full max-w-md bg-white bg-opacity-70 dark:bg-gray-900 dark:bg-opacity-70 backdrop-blur rounded-xl shadow-lg p-8">
           <h1 className="text-4xl font-semibold mb-6 text-center">Fulexo</h1>
           {error && <p className="mb-4 text-red-600 text-center">{error}</p>}

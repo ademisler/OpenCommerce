@@ -96,7 +96,7 @@ export default function OrderDetail() {
         />
         <div className="space-x-2">
           <button
-            className="bg-blue-500 dark:bg-blue-600 text-white px-3 py-1 rounded dark:border dark:border-gray-600"
+            className="bg-blue-600 dark:bg-blue-500 text-white px-3 py-1 rounded dark:border dark:border-gray-600"
             onClick={async () => {
               await fetch(`/api/orders/${data.id}?storeId=${store.id}`, {
                 method: 'PUT',
