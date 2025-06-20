@@ -28,6 +28,11 @@ export default function WooCommerceIntegrations() {
   const [key, setKey] = useState('');
   const [secret, setSecret] = useState('');
 
+  const removeStore = async (id: number) => {
+    await fetch(`/api/stores/${id}`, { method: 'DELETE' });
+    mutate(stores.filter((s) => s.id !== id), false);
+  };
+
   const addStore = async () => {
     const payload = { name, baseUrl, key, secret };
     const res = await fetch('/api/stores', {
@@ -79,8 +84,16 @@ export default function WooCommerceIntegrations() {
       </div>
       <ul className="space-y-2">
         {stores.map((store) => (
-          <li key={store.id} className="border p-2 rounded">
-            {store.name} - {store.baseUrl}
+          <li key={store.id} className="border p-2 rounded flex justify-between items-center">
+            <span>
+              {store.name} - {store.baseUrl}
+            </span>
+            <button
+              className="text-red-600 hover:underline"
+              onClick={() => removeStore(store.id)}
+            >
+              Remove
+            </button>
           </li>
         ))}
       </ul>

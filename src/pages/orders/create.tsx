@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import useSWR from 'swr';
 import { useI18n } from '../../lib/i18n';
 import useStores from '../../lib/hooks/useStores';
+import { europeanCountries } from '../../utils/europeanCountries';
 
 interface Store {
   id: number;
@@ -116,9 +117,11 @@ export default function CreateOrder() {
           onChange={(e) => setCustomer({ ...customer, country: e.target.value })}
         >
           <option value="">{t('country')}</option>
-          <option value="TR">Turkey</option>
-          <option value="US">United States</option>
-          <option value="FR">France</option>
+          {europeanCountries.map((c) => (
+            <option key={c.code} value={c.code}>
+              {c.name}
+            </option>
+          ))}
         </select>
         <input
           className="border p-2 col-span-1 md:col-span-2"

@@ -27,9 +27,9 @@ const Layout: React.FC<Props> = ({ children }) => {
   const imageSrc = profile.image || session?.user?.image || 'https://via.placeholder.com/32';
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <header className="bg-gray-800 text-white p-4">
-        <nav className="flex items-center">
+    <div className="min-h-screen flex flex-col bg-gray-50 text-gray-900">
+      <header className="bg-gray-800 text-white">
+        <nav className="flex items-center container mx-auto p-4">
           <div className="flex space-x-4 flex-1">
             <Link href="/dashboard" className="hover:underline">{t('dashboard')}</Link>
             <Link href="/products" className="hover:underline">{t('products')}</Link>
@@ -76,7 +76,7 @@ const Layout: React.FC<Props> = ({ children }) => {
           )}
         </nav>
       </header>
-      <main className="flex-1 p-4">{children}</main>
+      <main className="flex-1 p-4 container mx-auto">{children}</main>
     </div>
   );
 };
