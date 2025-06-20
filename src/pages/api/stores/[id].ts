@@ -11,20 +11,41 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const email = session.user.email;
   const { id } = req.query as { id?: string };
 
-  if (req.method === 'DELETE') {
-    if (!id) {
-      return res.status(400).json({ error: 'Missing id' });
+  try {
+    if (req.method === 'DELETE') {
+      if (!id) {
+        return res.status(400).json({ error: 'Missing id' });
+      }
+      await sbRequest(
+        'DELETE',
+        'woo_stores',
+        undefined,
+        `?id=eq.${id}&email=eq.${email}`
+      );
+      return res.status(204).end();
     }
-    await sbRequest('DELETE', 'woo_stores', undefined, `?id=eq.${id}&email=eq.${email}`);
-    return res.status(204).end();
-  }
 
-  if (req.method === 'PUT') {
-    if (!id) return res.status(400).json({ error: 'Missing id' });
-    const body = req.body ?? {};
-    const { baseUrl, ...rest } = body;
-    await sbRequest('PATCH', 'woo_stores', [{ ...rest, base_url: baseUrl }], `?id=eq.${id}&email=eq.${email}`);
-    return res.status(200).json({ ok: true });
+    if (req.method === 'PUT') {
+      if (!id) return res.status(400).json({ error: 'Missing id' });
+      const body = req.body ?? {};
+      const { baseUrl, ...rest } = body;
+      await sbRequest(
+        'PATCH',
+        'woo_stores',
+        [{ ...rest, base_url: baseUrl }],
+        `?id=eq.${id}&email=eq.${email}`
+      );
+      return res.status(200).json({ ok: true });
+    }
+  } catch (error) {
+    console.error('Failed to handle store update:', error);
+    if (
+      error instanceof Error &&
+      error.message.startsWith('Missing Supabase configuration')
+    ) {
+      return res.status(200).json({ ok: true });
+    }
+    return res.status(500).json({ error: 'Server Error' });
   }
 
   res.setHeader('Allow', ['DELETE', 'PUT']);

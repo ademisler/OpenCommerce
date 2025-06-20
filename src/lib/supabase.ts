@@ -6,7 +6,7 @@ const SUPABASE_KEY =
 
 function ensureConfig() {
   if (!SUPABASE_URL || !SUPABASE_KEY) {
-    throw new Error('Supabase environment variables are missing');
+    throw new Error('Missing Supabase configuration');
   }
   return { url: SUPABASE_URL, key: SUPABASE_KEY };
 }
