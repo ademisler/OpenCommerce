@@ -22,6 +22,7 @@ interface Product {
   name: string;
   stock: number;
   image: string;
+  price: number;
 }
 
 interface OrderItem {
