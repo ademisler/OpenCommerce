@@ -145,19 +145,46 @@ export default function Products() {
                     className="border p-1"
                     placeholder="L"
                     value={form.dimensions?.length || ''}
-                    onChange={(e) => setForm({ ...form, dimensions: { ...form.dimensions, length: e.target.value } })}
+                    onChange={(e) =>
+                      setForm({
+                        ...form,
+                        dimensions: {
+                          length: e.target.value,
+                          width: form.dimensions?.width ?? '',
+                          height: form.dimensions?.height ?? '',
+                        },
+                      })
+                    }
                   />
                   <input
                     className="border p-1"
                     placeholder="W"
                     value={form.dimensions?.width || ''}
-                    onChange={(e) => setForm({ ...form, dimensions: { ...form.dimensions, width: e.target.value } })}
+                    onChange={(e) =>
+                      setForm({
+                        ...form,
+                        dimensions: {
+                          length: form.dimensions?.length ?? '',
+                          width: e.target.value,
+                          height: form.dimensions?.height ?? '',
+                        },
+                      })
+                    }
                   />
                   <input
                     className="border p-1"
                     placeholder="H"
                     value={form.dimensions?.height || ''}
-                    onChange={(e) => setForm({ ...form, dimensions: { ...form.dimensions, height: e.target.value } })}
+                    onChange={(e) =>
+                      setForm({
+                        ...form,
+                        dimensions: {
+                          length: form.dimensions?.length ?? '',
+                          width: form.dimensions?.width ?? '',
+                          height: e.target.value,
+                        },
+                      })
+                    }
                   />
                 </div>
                 <input
