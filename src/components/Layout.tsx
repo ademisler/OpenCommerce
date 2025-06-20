@@ -37,6 +37,7 @@ const Layout: React.FC<Props> = ({ children, title }) => {
         <title>{title ? `${title} - Fulexo` : 'Fulexo'}</title>
       </Head>
       <div className="min-h-screen flex flex-col bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100">
+      {session && (
       <header className="bg-gray-800 text-white dark:bg-gray-700">
         <nav className="flex justify-between items-center container mx-auto p-4 relative">
           <button
@@ -110,6 +111,7 @@ const Layout: React.FC<Props> = ({ children, title }) => {
           </div>
         )}
       </header>
+      )}
       <main className="flex-1 p-4 container mx-auto">{children}</main>
       </div>
     </>
