@@ -14,6 +14,14 @@ export default function Dashboard() {
   const { data: stores = [] } = useStores();
   const [selected, setSelected] = useState<Store | null>(null);
 
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      router.replace('/login');
+    }
+  }, [status, router]);
+
+  if (status === 'loading' || status === 'unauthenticated') return null;
+
 
   const ordersQuery = selected ? `/api/orders?storeId=${selected.id}` : null;
   const productsQuery = selected ? `/api/products?storeId=${selected.id}` : null;

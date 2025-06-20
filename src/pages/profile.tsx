@@ -68,7 +68,7 @@ export default function Profile() {
             onChange={(e) => setProfile({ ...profile, image: e.target.value })}
           />
         </div>
-        <button className="bg-blue-500 dark:bg-blue-600 text-white px-4 py-2 rounded-md dark:border dark:border-gray-600" onClick={saveProfile}>
+        <button className="bg-blue-600 dark:bg-blue-500 text-white px-4 py-2 rounded-md dark:border dark:border-gray-600" onClick={saveProfile}>
           {t('saveProfile')}
         </button>
         <button className="bg-red-500 dark:bg-red-700 text-white px-4 py-2 mt-4 rounded-md dark:border dark:border-gray-600" onClick={() => signOut()}>

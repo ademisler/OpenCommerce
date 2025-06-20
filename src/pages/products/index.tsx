@@ -260,7 +260,7 @@ export default function Products() {
                   />
                   <button
                     type="button"
-                    className="ml-2 bg-blue-500 dark:bg-blue-600 text-white px-2 py-1 rounded-md flex items-center dark:border dark:border-gray-600"
+                    className="ml-2 bg-blue-600 dark:bg-blue-500 text-white px-2 py-1 rounded-md flex items-center dark:border dark:border-gray-600"
                     onClick={() => {
                       if (!newCat) return;
                       setForm({
@@ -285,7 +285,7 @@ export default function Products() {
                 </p>
                 <div className="flex space-x-2">
                   <button
-                    className="bg-blue-500 dark:bg-blue-600 text-white px-2 py-1 rounded-md flex items-center space-x-1 dark:border dark:border-gray-600"
+                    className="bg-blue-600 dark:bg-blue-500 text-white px-2 py-1 rounded-md flex items-center space-x-1 dark:border dark:border-gray-600"
                     onClick={async () => {
                       await fetch(`/api/products/${product.id}?storeId=${selected?.id}`, {
                         method: 'PUT',
