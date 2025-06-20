@@ -59,6 +59,12 @@ export default function Orders() {
   return (
     <Layout>
       <h1 className="text-2xl font-bold mb-4">Orders</h1>
+      <Link
+        href="/orders/create"
+        className="inline-block mb-4 bg-blue-500 text-white px-4 py-2 rounded"
+      >
+        Create Order
+      </Link>
       <div className="mb-4">
         <select
           className="border p-2"

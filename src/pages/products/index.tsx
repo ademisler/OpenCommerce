@@ -16,6 +16,7 @@ interface Product {
   id: number;
   name: string;
   stock: number;
+  image: string;
 }
 
 const fetcher = <T,>(url: string): Promise<T> => fetch(url).then((res) => res.json());
@@ -75,8 +76,12 @@ export default function Products() {
       </div>
       <ul className="space-y-2">
         {data.map((product) => (
-          <li key={product.id} className="border p-2 rounded">
-            {product.name} - Stock: {product.stock}
+          <li key={product.id} className="border p-2 rounded flex items-center space-x-4">
+            <img src={product.image} alt={product.name} className="w-16 h-16 object-cover" />
+            <div>
+              <p className="font-medium">{product.name}</p>
+              <p className="text-sm text-gray-600">Stock: {product.stock}</p>
+            </div>
           </li>
         ))}
       </ul>
