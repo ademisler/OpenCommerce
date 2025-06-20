@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { useSession, signOut } from 'next-auth/react';
 import { useI18n, Lang } from '../lib/i18n';
 import { useTheme } from '../lib/theme';
-import { SunIcon, MoonIcon } from './Icons';
+import { SunIcon, MoonIcon, MenuIcon, XIcon } from './Icons';
 
 interface Props {
   children: React.ReactNode;
@@ -14,6 +14,7 @@ const Layout: React.FC<Props> = ({ children }) => {
   const { t, lang, setLang } = useI18n();
   const { theme, toggleTheme } = useTheme();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [navOpen, setNavOpen] = useState(false);
   const [profile, setProfile] = useState<{ name: string; image: string }>({ name: '', image: '' });
 
   useEffect(() => {
@@ -32,8 +33,15 @@ const Layout: React.FC<Props> = ({ children }) => {
   return (
     <div className="min-h-screen flex flex-col bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100">
       <header className="bg-gray-800 text-white dark:bg-gray-700">
-        <nav className="flex items-center container mx-auto p-4">
-          <div className="flex space-x-4 flex-1">
+        <nav className="flex items-center container mx-auto p-4 relative">
+          <button
+            className="mr-4 block md:hidden"
+            onClick={() => setNavOpen(!navOpen)}
+            aria-label="Menu"
+          >
+            {navOpen ? <XIcon className="w-6 h-6" /> : <MenuIcon className="w-6 h-6" />}
+          </button>
+          <div className="hidden md:flex space-x-4 flex-1">
             <Link href="/dashboard" className="hover:underline">{t('dashboard')}</Link>
             <Link href="/products" className="hover:underline">{t('products')}</Link>
             <Link href="/orders" className="hover:underline">{t('orders')}</Link>
@@ -85,6 +93,15 @@ const Layout: React.FC<Props> = ({ children }) => {
             <Link href="/login" className="hover:underline">{t('login')}</Link>
           )}
         </nav>
+        {navOpen && (
+          <div className="md:hidden flex flex-col space-y-2 px-4 pb-4 bg-gray-800 text-white dark:bg-gray-700">
+            <Link href="/dashboard" className="hover:underline" onClick={() => setNavOpen(false)}>{t('dashboard')}</Link>
+            <Link href="/products" className="hover:underline" onClick={() => setNavOpen(false)}>{t('products')}</Link>
+            <Link href="/orders" className="hover:underline" onClick={() => setNavOpen(false)}>{t('orders')}</Link>
+            <Link href="/integrations" className="hover:underline" onClick={() => setNavOpen(false)}>{t('integrations')}</Link>
+            <Link href="/automations" className="hover:underline" onClick={() => setNavOpen(false)}>{t('automations')}</Link>
+          </div>
+        )}
       </header>
       <main className="flex-1 p-4 container mx-auto">{children}</main>
     </div>
