@@ -26,6 +26,7 @@ export default function Products() {
   const router = useRouter();
   const [stores, setStores] = useState<Store[]>([]);
   const [selected, setSelected] = useState<Store | null>(null);
+  const [search, setSearch] = useState('');
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -58,6 +59,10 @@ export default function Products() {
   );
   if (!data) return <div>Loading...</div>;
 
+  const filtered = data.filter((p) =>
+    p.name.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
     <Layout>
       <h1 className="text-2xl font-bold mb-4">Products</h1>
@@ -77,8 +82,16 @@ export default function Products() {
           ))}
         </select>
       </div>
+      <div className="mb-4">
+        <input
+          className="border p-2 w-full"
+          placeholder="Search products"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+      </div>
       <ul className="space-y-2">
-        {data.map((product) => (
+        {filtered.map((product) => (
           <li key={product.id} className="border p-2 rounded flex items-center space-x-4">
             <img src={product.image} alt={product.name} className="w-16 h-16 object-cover" />
             <div>
