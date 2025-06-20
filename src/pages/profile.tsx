@@ -53,25 +53,25 @@ export default function Profile() {
       <h1 className="text-2xl font-bold mb-4">{t('profile')}</h1>
       <div className="space-y-4 max-w-sm">
         <div>
-          <label className="block mb-1">{t('name')}</label>
+          <label className="block mb-1 text-sm text-gray-700 dark:text-gray-200">{t('name')}</label>
           <input
-            className="border p-2 w-full"
+            className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 p-2 w-full"
             value={profile.name}
             onChange={(e) => setProfile({ ...profile, name: e.target.value })}
           />
         </div>
         <div>
-          <label className="block mb-1">{t('profileImage')}</label>
+          <label className="block mb-1 text-sm text-gray-700 dark:text-gray-200">{t('profileImage')}</label>
           <input
-            className="border p-2 w-full"
+            className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 p-2 w-full"
             value={profile.image}
             onChange={(e) => setProfile({ ...profile, image: e.target.value })}
           />
         </div>
-        <button className="bg-blue-500 text-white px-4 py-2 rounded-md" onClick={saveProfile}>
+        <button className="bg-blue-500 dark:bg-blue-600 text-white px-4 py-2 rounded-md dark:border dark:border-gray-600" onClick={saveProfile}>
           {t('saveProfile')}
         </button>
-        <button className="bg-red-500 text-white px-4 py-2 mt-4 rounded-md" onClick={() => signOut()}>
+        <button className="bg-red-500 dark:bg-red-700 text-white px-4 py-2 mt-4 rounded-md dark:border dark:border-gray-600" onClick={() => signOut()}>
           {t('signOut')}
         </button>
       </div>

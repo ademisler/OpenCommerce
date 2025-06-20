@@ -25,24 +25,35 @@ export default function Login() {
     <Layout>
       <div className="max-w-sm mx-auto">
         <h1 className="text-2xl font-bold mb-4">{t('login')}</h1>
-        <form onSubmit={handleSubmit} className="space-y-2">
-          <input
-            className="border p-2 w-full"
-            type="email"
-            placeholder={t('email')}
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          <input
-            className="border p-2 w-full"
-            type="password"
-            placeholder={t('password')}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-          <button className="bg-blue-500 text-white px-4 py-2 w-full rounded-md" type="submit">
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block mb-1 text-sm text-gray-700 dark:text-gray-200">
+              {t('email')}
+            </label>
+            <input
+              className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 p-2 w-full"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div>
+            <label className="block mb-1 text-sm text-gray-700 dark:text-gray-200">
+              {t('password')}
+            </label>
+            <input
+              className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 p-2 w-full"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          <button
+            className="bg-blue-500 dark:bg-blue-600 text-white px-4 py-2 w-full rounded-md dark:border dark:border-gray-600"
+            type="submit"
+          >
             {t('signIn')}
           </button>
         </form>

@@ -71,63 +71,83 @@ export default function WooCommerceIntegrations() {
   return (
     <Layout>
       <h1 className="text-2xl font-bold mb-4">{t('wooStores')}</h1>
-      <div className="mb-6 space-y-2">
-        <input
-          className="border p-2 w-full"
-          placeholder={t('storeName')}
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-        <input
-          className="border p-2 w-full"
-          placeholder={t('baseUrl')}
-          value={baseUrl}
-          onChange={(e) => setBaseUrl(e.target.value)}
-        />
-        <input
-          className="border p-2 w-full"
-          placeholder={t('consumerKey')}
-          value={key}
-          onChange={(e) => setKey(e.target.value)}
-        />
-        <input
-          className="border p-2 w-full"
-          placeholder={t('consumerSecret')}
-          value={secret}
-          onChange={(e) => setSecret(e.target.value)}
-        />
-        <button className="bg-blue-500 text-white px-4 py-2 rounded-md" onClick={addStore}>
+      <div className="mb-6 space-y-4">
+        <div>
+          <label className="block mb-1 text-sm text-gray-700 dark:text-gray-200">{t('storeName')}</label>
+          <input
+            className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 p-2 w-full"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+        </div>
+        <div>
+          <label className="block mb-1 text-sm text-gray-700 dark:text-gray-200">{t('baseUrl')}</label>
+          <input
+            className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 p-2 w-full"
+            value={baseUrl}
+            onChange={(e) => setBaseUrl(e.target.value)}
+          />
+        </div>
+        <div>
+          <label className="block mb-1 text-sm text-gray-700 dark:text-gray-200">{t('consumerKey')}</label>
+          <input
+            className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 p-2 w-full"
+            value={key}
+            onChange={(e) => setKey(e.target.value)}
+          />
+        </div>
+        <div>
+          <label className="block mb-1 text-sm text-gray-700 dark:text-gray-200">{t('consumerSecret')}</label>
+          <input
+            className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 p-2 w-full"
+            value={secret}
+            onChange={(e) => setSecret(e.target.value)}
+          />
+        </div>
+        <button className="bg-blue-500 dark:bg-blue-600 text-white px-4 py-2 rounded-md dark:border dark:border-gray-600" onClick={addStore}>
           {t('addStore')}
         </button>
       </div>
       <ul className="space-y-2">
         {stores.map((store) => (
-          <li key={store.id} className="border p-2 rounded">
+          <li key={store.id} className="border border-gray-300 dark:border-gray-600 p-2 rounded bg-white dark:bg-gray-800">
             {editing?.id === store.id ? (
               <div className="space-y-2">
-                <input
-                  className="border p-1 w-full"
-                  value={editing.name}
-                  onChange={(e) => setEditing({ ...editing, name: e.target.value })}
-                />
-                <input
-                  className="border p-1 w-full"
-                  value={editing.baseUrl}
-                  onChange={(e) => setEditing({ ...editing, baseUrl: e.target.value })}
-                />
-                <input
-                  className="border p-1 w-full"
-                  value={editing.key}
-                  onChange={(e) => setEditing({ ...editing, key: e.target.value })}
-                />
-                <input
-                  className="border p-1 w-full"
-                  value={editing.secret}
-                  onChange={(e) => setEditing({ ...editing, secret: e.target.value })}
-                />
+                <div>
+                  <label className="block mb-1 text-sm text-gray-700 dark:text-gray-200">{t('storeName')}</label>
+                  <input
+                    className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 p-1 w-full"
+                    value={editing.name}
+                    onChange={(e) => setEditing({ ...editing, name: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <label className="block mb-1 text-sm text-gray-700 dark:text-gray-200">{t('baseUrl')}</label>
+                  <input
+                    className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 p-1 w-full"
+                    value={editing.baseUrl}
+                    onChange={(e) => setEditing({ ...editing, baseUrl: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <label className="block mb-1 text-sm text-gray-700 dark:text-gray-200">{t('consumerKey')}</label>
+                  <input
+                    className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 p-1 w-full"
+                    value={editing.key}
+                    onChange={(e) => setEditing({ ...editing, key: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <label className="block mb-1 text-sm text-gray-700 dark:text-gray-200">{t('consumerSecret')}</label>
+                  <input
+                    className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 p-1 w-full"
+                    value={editing.secret}
+                    onChange={(e) => setEditing({ ...editing, secret: e.target.value })}
+                  />
+                </div>
                 <div className="flex space-x-2">
-                  <button className="bg-blue-500 text-white px-2 py-1 rounded-md" onClick={updateStore}>Save</button>
-                  <button className="px-2 py-1 rounded-md" onClick={() => setEditing(null)}>Cancel</button>
+                  <button className="bg-blue-500 dark:bg-blue-600 text-white px-2 py-1 rounded-md dark:border dark:border-gray-600" onClick={updateStore}>{t('save')}</button>
+                  <button className="px-2 py-1 rounded-md dark:border dark:border-gray-600" onClick={() => setEditing(null)}>{t('cancel')}</button>
                 </div>
               </div>
             ) : (

@@ -75,7 +75,7 @@ export default function Products() {
       <h1 className="text-2xl font-bold mb-4">{t('products')}</h1>
       <div className="mb-4">
         <select
-          className="border p-2"
+          className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 p-2"
           value={selected?.id ?? ''}
           onChange={(e) => {
             const store = stores.find((s) => s.id === Number(e.target.value));
@@ -90,16 +90,18 @@ export default function Products() {
         </select>
       </div>
       <div className="mb-4">
+        <label className="block mb-1 text-sm text-gray-700 dark:text-gray-200">
+          {t('searchProducts')}
+        </label>
         <input
-          className="border p-2 w-full"
-          placeholder={t('searchProducts')}
+          className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 p-2 w-full"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
       </div>
       <ul className="space-y-2">
         {filtered.map((product) => (
-          <li key={product.id} className="border p-2 rounded">
+          <li key={product.id} className="border border-gray-300 dark:border-gray-600 p-2 rounded bg-white dark:bg-gray-800">
             <div className="flex items-center space-x-4">
               <img
                 src={product.image}
@@ -137,87 +139,104 @@ export default function Products() {
             )}
             {editing === product.id && (
               <div className="mt-2 space-y-2">
-                <input
-                  className="border p-1 w-full"
-                  value={form.name || ''}
-                  onChange={(e) => setForm({ ...form, name: e.target.value })}
-                />
-                <input
-                  type="number"
-                  className="border p-1 w-full"
-                  placeholder={t('stock')}
-                  value={form.stock ?? 0}
-                  onChange={(e) => setForm({ ...form, stock: Number(e.target.value) })}
-                />
-                <input
-                  className="border p-1 w-full"
-                  placeholder={t('weight')}
-                  value={form.weight || ''}
-                  onChange={(e) => setForm({ ...form, weight: e.target.value })}
-                />
-                <input
-                  type="number"
-                  className="border p-1 w-full"
-                  placeholder={t('price')}
-                  value={form.price ?? 0}
-                  onChange={(e) => setForm({ ...form, price: Number(e.target.value) })}
-                />
-                <input
-                  className="border p-1 w-full"
-                  placeholder={t('ean')}
-                  value={form.ean || ''}
-                  onChange={(e) => setForm({ ...form, ean: e.target.value })}
-                />
+                <div>
+                  <label className="block mb-1 text-sm text-gray-700 dark:text-gray-200">Name</label>
+                  <input
+                    className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 p-1 w-full"
+                    value={form.name || ''}
+                    onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <label className="block mb-1 text-sm text-gray-700 dark:text-gray-200">{t('stock')}</label>
+                  <input
+                    type="number"
+                    className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 p-1 w-full"
+                    value={form.stock ?? 0}
+                    onChange={(e) => setForm({ ...form, stock: Number(e.target.value) })}
+                  />
+                </div>
+                <div>
+                  <label className="block mb-1 text-sm text-gray-700 dark:text-gray-200">{t('weight')}</label>
+                  <input
+                    className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 p-1 w-full"
+                    value={form.weight || ''}
+                    onChange={(e) => setForm({ ...form, weight: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <label className="block mb-1 text-sm text-gray-700 dark:text-gray-200">{t('price')}</label>
+                  <input
+                    type="number"
+                    className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 p-1 w-full"
+                    value={form.price ?? 0}
+                    onChange={(e) => setForm({ ...form, price: Number(e.target.value) })}
+                  />
+                </div>
+                <div>
+                  <label className="block mb-1 text-sm text-gray-700 dark:text-gray-200">{t('ean')}</label>
+                  <input
+                    className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 p-1 w-full"
+                    value={form.ean || ''}
+                    onChange={(e) => setForm({ ...form, ean: e.target.value })}
+                  />
+                </div>
                 <div className="grid grid-cols-3 gap-1">
-                  <input
-                    className="border p-1"
-                    placeholder={t('lengthShort')}
-                    value={form.dimensions?.length || ''}
-                    onChange={(e) =>
-                      setForm({
-                        ...form,
-                        dimensions: {
-                          length: e.target.value,
-                          width: form.dimensions?.width ?? '',
-                          height: form.dimensions?.height ?? '',
-                        },
-                      })
-                    }
-                  />
-                  <input
-                    className="border p-1"
-                    placeholder={t('widthShort')}
-                    value={form.dimensions?.width || ''}
-                    onChange={(e) =>
-                      setForm({
-                        ...form,
-                        dimensions: {
-                          length: form.dimensions?.length ?? '',
-                          width: e.target.value,
-                          height: form.dimensions?.height ?? '',
-                        },
-                      })
-                    }
-                  />
-                  <input
-                    className="border p-1"
-                    placeholder={t('heightShort')}
-                    value={form.dimensions?.height || ''}
-                    onChange={(e) =>
-                      setForm({
-                        ...form,
-                        dimensions: {
-                          length: form.dimensions?.length ?? '',
-                          width: form.dimensions?.width ?? '',
-                          height: e.target.value,
-                        },
-                      })
-                    }
-                  />
+                  <div>
+                    <label className="block mb-1 text-sm text-gray-700 dark:text-gray-200">{t('lengthShort')}</label>
+                    <input
+                      className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 p-1 w-full"
+                      value={form.dimensions?.length || ''}
+                      onChange={(e) =>
+                        setForm({
+                          ...form,
+                          dimensions: {
+                            length: e.target.value,
+                            width: form.dimensions?.width ?? '',
+                            height: form.dimensions?.height ?? '',
+                          },
+                        })
+                      }
+                    />
+                  </div>
+                  <div>
+                    <label className="block mb-1 text-sm text-gray-700 dark:text-gray-200">{t('widthShort')}</label>
+                    <input
+                      className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 p-1 w-full"
+                      value={form.dimensions?.width || ''}
+                      onChange={(e) =>
+                        setForm({
+                          ...form,
+                          dimensions: {
+                            length: form.dimensions?.length ?? '',
+                            width: e.target.value,
+                            height: form.dimensions?.height ?? '',
+                          },
+                        })
+                      }
+                    />
+                  </div>
+                  <div>
+                    <label className="block mb-1 text-sm text-gray-700 dark:text-gray-200">{t('heightShort')}</label>
+                    <input
+                      className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 p-1 w-full"
+                      value={form.dimensions?.height || ''}
+                      onChange={(e) =>
+                        setForm({
+                          ...form,
+                          dimensions: {
+                            length: form.dimensions?.length ?? '',
+                            width: form.dimensions?.width ?? '',
+                            height: e.target.value,
+                          },
+                        })
+                      }
+                    />
+                  </div>
                 </div>
                 <select
                   multiple
-                  className="border p-1 w-full h-32"
+                  className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 p-1 w-full h-32"
                   value={form.categories || []}
                   onChange={(e) =>
                     setForm({
@@ -234,14 +253,14 @@ export default function Products() {
                 </select>
                 <div className="flex mt-1">
                   <input
-                    className="border p-1 flex-1"
+                    className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 p-1 flex-1"
                     placeholder={t('newCategory')}
                     value={newCat}
                     onChange={(e) => setNewCat(e.target.value)}
                   />
                   <button
                     type="button"
-                    className="ml-2 bg-blue-500 text-white px-2 py-1 rounded-md flex items-center"
+                    className="ml-2 bg-blue-500 dark:bg-blue-600 text-white px-2 py-1 rounded-md flex items-center dark:border dark:border-gray-600"
                     onClick={() => {
                       if (!newCat) return;
                       setForm({
@@ -266,7 +285,7 @@ export default function Products() {
                 </p>
                 <div className="flex space-x-2">
                   <button
-                    className="bg-blue-500 text-white px-2 py-1 rounded-md flex items-center space-x-1"
+                    className="bg-blue-500 dark:bg-blue-600 text-white px-2 py-1 rounded-md flex items-center space-x-1 dark:border dark:border-gray-600"
                     onClick={async () => {
                       await fetch(`/api/products/${product.id}?storeId=${selected?.id}`, {
                         method: 'PUT',
@@ -278,8 +297,8 @@ export default function Products() {
                   >
                     <span>Save</span>
                   </button>
-                  <button className="px-2 py-1 rounded-md" onClick={() => setEditing(null)}>
-                    Cancel
+                  <button className="px-2 py-1 rounded-md dark:border dark:border-gray-600" onClick={() => setEditing(null)}>
+                    {t('cancel')}
                   </button>
                 </div>
               </div>

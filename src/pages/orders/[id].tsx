@@ -54,8 +54,11 @@ export default function OrderDetail() {
       <h1 className="text-2xl font-bold mb-4">{t('order')} #{data.id}</h1>
       <p>{t('total')}: {data.total}</p>
       <div className="space-y-2 mt-4">
+        <label className="block mb-1 text-sm text-gray-700 dark:text-gray-200">
+          {t('status')}
+        </label>
         <select
-          className="border p-2"
+          className="border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 p-2 w-full"
           value={newStatus || data.status}
           onChange={(e) => setNewStatus(e.target.value)}
         >
@@ -65,7 +68,7 @@ export default function OrderDetail() {
         </select>
         <div className="space-x-2">
           <button
-            className="bg-blue-500 text-white px-3 py-1 rounded"
+            className="bg-blue-500 dark:bg-blue-600 text-white px-3 py-1 rounded dark:border dark:border-gray-600"
             onClick={async () => {
               await fetch(`/api/orders/${data.id}?storeId=${store.id}`, {
                 method: 'PUT',
@@ -78,7 +81,7 @@ export default function OrderDetail() {
             {t('update')}
           </button>
           <button
-            className="bg-red-600 text-white px-3 py-1 rounded"
+            className="bg-red-600 dark:bg-red-700 text-white px-3 py-1 rounded dark:border dark:border-gray-600"
             onClick={async () => {
               await fetch(`/api/orders/${data.id}?storeId=${store.id}`, {
                 method: 'DELETE',
