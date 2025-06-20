@@ -244,7 +244,7 @@ export default function Products() {
                   onChange={(vals: any) =>
                     setForm({
                       ...form,
-                      categories: vals.map((v) => v.value),
+                      categories: vals.map((v: any) => v.value),
                     })
                   }
                 />
