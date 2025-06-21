@@ -36,8 +36,6 @@ interface OrderData {
   date_created: string;
   shipping_company?: string;
   tracking_number?: string;
-  payment_status?: string;
-  shipping_status?: string;
 }
 
 export default function EditOrder() {

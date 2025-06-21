@@ -15,6 +15,19 @@ export type Order = {
   shipping_company?: string;
   tracking_number?: string;
   customer?: string;
+  payment_status?: string;
+  shipping_status?: string;
+  items?: {
+    product_id: number;
+    name: string;
+    quantity: number;
+    price: number;
+  }[];
+  customer_name?: string;
+  customer_email?: string;
+  customer_phone?: string;
+  billing?: string;
+  delivery?: string;
 };
 
 const fallbackOrder: Order = {
@@ -25,6 +38,21 @@ const fallbackOrder: Order = {
   shipping_company: '',
   tracking_number: '',
   customer: 'John Doe',
+  payment_status: 'paid',
+  shipping_status: 'pending',
+  items: [
+    {
+      product_id: 1,
+      name: 'Example Product',
+      quantity: 1,
+      price: 19.99,
+    },
+  ],
+  customer_name: 'John Doe',
+  customer_email: 'john@example.com',
+  customer_phone: '555-1234',
+  billing: '123 Main St, City',
+  delivery: '123 Main St, City',
 };
 
 export default async function handler(
@@ -79,6 +107,14 @@ export default async function handler(
           shipping_company: shipping_company || '',
           tracking_number: tracking_number || '',
           customer: 'Updated',
+          payment_status: status === 'completed' ? 'paid' : 'unpaid',
+          shipping_status: status || 'updated',
+          items: [],
+          customer_name: 'Updated',
+          customer_email: '',
+          customer_phone: '',
+          billing: '',
+          delivery: '',
         });
     }
 
@@ -94,6 +130,33 @@ export default async function handler(
         tracking_number:
           order.meta_data?.find((m: any) => m.key === 'tracking_number')?.value || '',
         customer: `${order.billing?.first_name || ''} ${order.billing?.last_name || ''}`.trim(),
+        payment_status: order.status === 'completed' ? 'paid' : 'unpaid',
+        shipping_status: order.status,
+        items: (order.line_items || []).map((it: any) => ({
+          product_id: it.product_id,
+          name: it.name,
+          quantity: it.quantity,
+          price: parseFloat(it.price || it.subtotal || 0),
+        })),
+        customer_name: `${order.billing?.first_name || ''} ${order.billing?.last_name || ''}`.trim(),
+        customer_email: order.billing?.email || '',
+        customer_phone: order.billing?.phone || '',
+        billing: [
+          order.billing?.address_1,
+          order.billing?.address_2,
+          order.billing?.city,
+          order.billing?.postcode,
+        ]
+          .filter(Boolean)
+          .join(', '),
+        delivery: [
+          order.shipping?.address_1,
+          order.shipping?.address_2,
+          order.shipping?.city,
+          order.shipping?.postcode,
+        ]
+          .filter(Boolean)
+          .join(', '),
       };
       res.status(200).json(result);
     } else {
