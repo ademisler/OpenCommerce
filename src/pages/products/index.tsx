@@ -68,15 +68,7 @@ export default function Products() {
   const { data: categories = [] } = useSWR<Category[]>(catQuery, fetcher);
   const categoryOptions = categories.map((c) => ({ value: c.name, label: c.name }));
 
-  if (error) return <div>{t('errorLoadingProducts')}</div>;
-  if (!selected) return (
-    <Layout title={t('products')}>
-      <p>{t('noStore')}</p>
-    </Layout>
-  );
-  if (!data) return <div>{t('loading')}</div>;
-
-  const filtered = data.filter((p) =>
+  const filtered = (data || []).filter((p) =>
     p.name.toLowerCase().includes(search.toLowerCase())
   );
   const pageSize = 20;
@@ -86,6 +78,14 @@ export default function Products() {
   useEffect(() => {
     if (page > totalPages) setPage(totalPages);
   }, [totalPages, page]);
+
+  if (error) return <div>{t('errorLoadingProducts')}</div>;
+  if (!selected) return (
+    <Layout title={t('products')}>
+      <p>{t('noStore')}</p>
+    </Layout>
+  );
+  if (!data) return <div>{t('loading')}</div>;
 
   return (
     <Layout title={t('products')}>
