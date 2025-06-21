@@ -91,8 +91,6 @@ export default function Products() {
       <p>{t('noStore')}</p>
     </Layout>
   );
-  if (!data) return <Loader className="py-8" />;
-
   return (
     <Layout title={t('products')}>
       <h1 className="text-2xl font-bold mb-4">{t('products')}</h1>
@@ -123,7 +121,10 @@ export default function Products() {
         />
       </div>
       <ul className="space-y-2">
-        {pageProducts.map((product) => (
+        {!data ? (
+          <Loader className="py-8" />
+        ) : (
+          pageProducts.map((product) => (
           <li key={product.id} className="border border-gray-300 dark:border-gray-600 p-2 rounded bg-white dark:bg-gray-800">
             <div className="flex items-center space-x-4">
               <img
@@ -331,7 +332,8 @@ export default function Products() {
               </div>
             )}
           </li>
-        ))}
+          ))
+        )}
       </ul>
       {totalPages > 1 && (
         <div className="mt-4 flex justify-center space-x-2">
