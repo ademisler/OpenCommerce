@@ -108,6 +108,9 @@ const Layout: React.FC<Props> = ({ children, title }) => {
       </header>
       )}
       <main className="flex-1 p-4 container mx-auto">{children}</main>
+      <footer className="text-center py-4 text-sm text-gray-500 dark:text-gray-400">
+        © {new Date().getFullYear()} Fulexo
+      </footer>
       </div>
     </>
   );
