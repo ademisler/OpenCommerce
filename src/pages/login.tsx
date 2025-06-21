@@ -65,7 +65,7 @@ export default function Login() {
       <Head>
         <title>{`${t('login')} - Fulexo`}</title>
       </Head>
-      <div className="bg-slate-950 text-white min-h-screen flex items-center justify-center p-4 overflow-hidden">
+      <div className="bg-slate-950 text-white min-h-screen flex items-center justify-center p-4 overflow-hidden relative">
         <div className="relative z-10 w-full max-w-md mx-auto">
           <div className="bg-gray-950/40 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl p-6 sm:p-8">
             <div className="text-center mb-6">
