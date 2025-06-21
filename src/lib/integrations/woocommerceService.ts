@@ -217,3 +217,71 @@ export async function updateOrder(
     body: JSON.stringify(data),
   });
 }
+
+export interface TrackingEntry {
+  id: string;
+  provider: string;
+  tracking_number: string;
+  date_shipped: string;
+}
+
+export async function fetchTrackingEntries(
+  id: number,
+  config?: Partial<WooConfig>
+): Promise<TrackingEntry[]> {
+  const order = await fetchOrder(id, config);
+  const meta = order.meta_data?.find((m: any) => m.key === 'tracking_info')?.value;
+  if (!meta) return [];
+  try {
+    return JSON.parse(meta) as TrackingEntry[];
+  } catch {
+    return [];
+  }
+}
+
+async function saveTrackingEntries(
+  id: number,
+  entries: TrackingEntry[],
+  config?: Partial<WooConfig>
+) {
+  await updateOrder(
+    id,
+    { meta_data: [{ key: 'tracking_info', value: JSON.stringify(entries) }] },
+    config
+  );
+}
+
+export async function addTrackingEntry(
+  id: number,
+  entry: TrackingEntry,
+  markCompleted: boolean,
+  config?: Partial<WooConfig>
+) {
+  const entries = await fetchTrackingEntries(id, config);
+  const updated = [...entries, entry];
+  const data: any = {
+    meta_data: [{ key: 'tracking_info', value: JSON.stringify(updated) }],
+  };
+  if (markCompleted) data.status = 'completed';
+  await updateOrder(id, data, config);
+}
+
+export async function deleteTrackingEntry(
+  id: number,
+  entryId: string,
+  config?: Partial<WooConfig>
+) {
+  const entries = await fetchTrackingEntries(id, config);
+  const updated = entries.filter((e) => e.id !== entryId);
+  await saveTrackingEntries(id, updated, config);
+}
+
+export async function sendOrderEmail(
+  id: number,
+  template: string,
+  config?: Partial<WooConfig>
+) {
+  // Placeholder implementation. A real integration would call a WooCommerce
+  // extension endpoint to send the email.
+  await updateOrder(id, { meta_data: [{ key: 'last_email_sent', value: template }] }, config);
+}

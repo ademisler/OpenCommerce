@@ -73,6 +73,18 @@ export default function EditOrder() {
   const carriersQuery = store ? `/api/carriers?storeId=${store.id}` : null;
   const { data: carriers = [] } = useSWR<string[]>(carriersQuery, fetcher);
 
+  const trackingQuery =
+    id && store ? `/api/orders/${id}/tracking?storeId=${store.id}` : null;
+  const {
+    data: trackingItems = [],
+    mutate: mutateTracking,
+  } = useSWR<{
+    id: string;
+    provider: string;
+    tracking_number: string;
+    date_shipped: string;
+  }[]>(trackingQuery, fetcher);
+
   const notesQuery = id && store ? `/api/orders/${id}/notes?storeId=${store.id}` : null;
   const { data: notes = [] } = useSWR<{ id: number; note: string; date_created: string }[]>(notesQuery, fetcher);
 
@@ -92,6 +104,14 @@ export default function EditOrder() {
   const [internalNote, setInternalNote] = useState('');
   const [customerNote, setCustomerNote] = useState('');
   const [labels, setLabels] = useState('');
+  const [showAddTracking, setShowAddTracking] = useState(false);
+  const [newTrackingNumber, setNewTrackingNumber] = useState('');
+  const [newTrackingProvider, setNewTrackingProvider] = useState('');
+  const [newDateShipped, setNewDateShipped] = useState(
+    new Date().toISOString().slice(0, 10)
+  );
+  const [markComplete, setMarkComplete] = useState(true);
+  const [emailTemplate, setEmailTemplate] = useState('');
 
   useEffect(() => {
     if (data) {
@@ -159,6 +179,45 @@ export default function EditOrder() {
       }),
     });
     mutate();
+  };
+
+  const addTrackingHandler = async () => {
+    if (!store || !id) return;
+    await fetch(`/api/orders/${id}/tracking?storeId=${store.id}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        provider: newTrackingProvider,
+        tracking_number: newTrackingNumber,
+        date_shipped: newDateShipped,
+        markCompleted: markComplete,
+      }),
+    });
+    setShowAddTracking(false);
+    setNewTrackingNumber('');
+    setNewTrackingProvider('');
+    mutate();
+    mutateTracking();
+  };
+
+  const deleteTrackingHandler = async (tid: string) => {
+    if (!store || !id) return;
+    await fetch(
+      `/api/orders/${id}/tracking?storeId=${store.id}&trackingId=${tid}`,
+      { method: 'DELETE' }
+    );
+    mutateTracking();
+  };
+
+  const sendEmailHandler = async () => {
+    if (!store || !id || !emailTemplate) return;
+    await updateOrderHandler();
+    await fetch(`/api/orders/${id}/send-email?storeId=${store.id}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ template: emailTemplate }),
+    });
+    setEmailTemplate('');
   };
 
   if (status === 'loading') return null;
@@ -350,7 +409,101 @@ export default function EditOrder() {
           </section>
           <section className="bg-white dark:bg-gray-900 p-4 rounded shadow">
             <h2 className="text-xl font-semibold mb-4">Shipment Tracking</h2>
-            <p className="text-sm">{tracking || 'No tracking number'}</p>
+            {trackingItems.length === 0 ? (
+              <p className="text-sm">No tracking info</p>
+            ) : (
+              <ul className="text-sm space-y-2">
+                {trackingItems.map((t) => (
+                  <li key={t.id} className="flex justify-between items-center">
+                    <div>
+                      <strong>{t.provider}</strong> -{' '}
+                      <a href="#" className="text-blue-600" target="_blank" rel="noreferrer">
+                        {t.tracking_number}
+                      </a>
+                    </div>
+                    <button
+                      onClick={() => deleteTrackingHandler(t.id)}
+                      className="text-red-600 text-sm"
+                    >
+                      Delete
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+            {showAddTracking ? (
+              <div className="mt-2 space-y-2">
+                <input
+                  className="w-full border p-1"
+                  placeholder="Tracking Number"
+                  value={newTrackingNumber}
+                  onChange={(e) => setNewTrackingNumber(e.target.value)}
+                />
+                <select
+                  className="w-full border p-1"
+                  value={newTrackingProvider}
+                  onChange={(e) => setNewTrackingProvider(e.target.value)}
+                >
+                  <option value="">Shipping Provider</option>
+                  {carriers.map((c) => (
+                    <option key={c} value={c}>
+                      {c}
+                    </option>
+                  ))}
+                </select>
+                <input
+                  type="date"
+                  className="w-full border p-1"
+                  value={newDateShipped}
+                  onChange={(e) => setNewDateShipped(e.target.value)}
+                />
+                <label className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    checked={markComplete}
+                    onChange={(e) => setMarkComplete(e.target.checked)}
+                  />
+                  <span>Mark order as Completed</span>
+                </label>
+                <button
+                  className="w-full px-4 py-1 rounded text-white bg-gradient-to-r from-rose-500 to-orange-500 hover:from-rose-400 hover:to-orange-400"
+                  type="button"
+                  onClick={addTrackingHandler}
+                >
+                  Fulfill Order
+                </button>
+              </div>
+            ) : (
+              <button
+                type="button"
+                className="w-full mt-2 px-4 py-1 rounded text-white bg-gradient-to-r from-rose-500 to-orange-500 hover:from-rose-400 hover:to-orange-400"
+                onClick={() => setShowAddTracking(true)}
+              >
+                Add Tracking Info
+              </button>
+            )}
+          </section>
+          <section className="bg-white dark:bg-gray-900 p-4 rounded shadow">
+            <h2 className="text-xl font-semibold mb-4">Send order email</h2>
+            <select
+              className="w-full border p-1 mb-2"
+              value={emailTemplate}
+              onChange={(e) => setEmailTemplate(e.target.value)}
+            >
+              <option value="">Choose an email to send…</option>
+              <option value="new_order">New order</option>
+              <option value="cancelled_order">Cancelled order</option>
+              <option value="processing_order">Processing order</option>
+              <option value="completed_order">Completed order</option>
+              <option value="order_details">Order details</option>
+            </select>
+            <button
+              type="button"
+              className="w-full px-4 py-1 rounded text-white bg-gradient-to-r from-rose-500 to-orange-500 hover:from-rose-400 hover:to-orange-400"
+              onClick={sendEmailHandler}
+            >
+              Save order &amp; send email
+            </button>
           </section>
         </aside>
       </div>
