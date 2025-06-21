@@ -9,7 +9,7 @@ import dynamic from 'next/dynamic';
 // Relax type checking since we load react-select dynamically and the package
 // isn't available in this environment during type checking.
 const Select = dynamic<any>(() => import('react-select'), { ssr: false });
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { useI18n } from '../../lib/i18n';
@@ -68,6 +68,21 @@ export default function Products() {
   const { data: categories = [] } = useSWR<Category[]>(catQuery, fetcher);
   const categoryOptions = categories.map((c) => ({ value: c.name, label: c.name }));
 
+  const filtered = useMemo(
+    () => (data || []).filter((p) => p.name.toLowerCase().includes(search.toLowerCase())),
+    [data, search]
+  );
+  const pageSize = 20;
+  const totalPages = useMemo(() => Math.ceil(filtered.length / pageSize) || 1, [filtered.length]);
+  const pageProducts = useMemo(
+    () => filtered.slice((page - 1) * pageSize, page * pageSize),
+    [filtered, page]
+  );
+
+  useEffect(() => {
+    if (page > totalPages) setPage(totalPages);
+  }, [totalPages, page]);
+
   if (error) return <div>{t('errorLoadingProducts')}</div>;
   if (!selected) return (
     <Layout title={t('products')}>
@@ -75,17 +90,6 @@ export default function Products() {
     </Layout>
   );
   if (!data) return <div>{t('loading')}</div>;
-
-  const filtered = data.filter((p) =>
-    p.name.toLowerCase().includes(search.toLowerCase())
-  );
-  const pageSize = 20;
-  const totalPages = Math.ceil(filtered.length / pageSize) || 1;
-  const pageProducts = filtered.slice((page - 1) * pageSize, page * pageSize);
-
-  useEffect(() => {
-    if (page > totalPages) setPage(totalPages);
-  }, [totalPages, page]);
 
   return (
     <Layout title={t('products')}>
