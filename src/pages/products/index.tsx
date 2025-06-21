@@ -2,7 +2,11 @@ import Layout from '../../components/Layout';
 import useSWR from 'swr';
 import { fetcher } from '../../lib/fetcher';
 import { EditIcon, PlusIcon } from '../../components/Icons';
-import Select from 'react-select';
+import dynamic from 'next/dynamic';
+
+// react-select relies on browser APIs that aren't available during
+// server-side rendering, so load it dynamically on the client only.
+const Select = dynamic(() => import('react-select'), { ssr: false });
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
